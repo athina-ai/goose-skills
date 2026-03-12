@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const {
   parseInstallOptions,
+  placeForClaude,
   placeForCodex,
   placeForCursor,
 } = require('./lib/targets');
@@ -60,6 +61,11 @@ async function fetchIndex() {
 function getInstallDir(slug) {
   const home = process.env.HOME || process.env.USERPROFILE;
   return path.join(home, '.claude', 'skills', slug);
+}
+
+function getClaudeSkillsRoot() {
+  const home = process.env.HOME || process.env.USERPROFILE;
+  return path.join(home, '.claude', 'skills');
 }
 
 function getCodexSkillsRoot() {
@@ -122,9 +128,9 @@ async function installSkill(options) {
     return;
   }
 
-  console.log(`\nNext step (Claude Code):`);
-  console.log(`  cp -r ${installDir}/SKILL.md .claude/skills/${slug}.md`);
-  console.log(`  # Or reference directly: ${installDir}/SKILL.md`);
+  // Claude Code (default): auto-place skill file at ~/.claude/skills/<slug>.md
+  const skillFile = placeForClaude(installDir, getClaudeSkillsRoot());
+  console.log(`\nSkill active: ${skillFile}`);
 }
 
 async function listSkills() {
