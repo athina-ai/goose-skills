@@ -17,7 +17,7 @@ Take an enriched Extruct table + hypothesis set and produce a tiered, segmented 
 ### Extruct API Token
 
 Get your API token from [Extruct Settings](https://app.extruct.ai/settings). Add to `.env`:
-```
+```bash
 EXTRUCT_API_TOKEN=your-token-here
 ```
 
@@ -143,15 +143,15 @@ This skill includes a Python script for automated segmentation:
 
 ```bash
 # Segment from Extruct table
-python3 skills/extruct-list-segmentation/scripts/segment_list.py \
+python3 skills/capabilities/extruct-list-segmentation/scripts/segment_list.py \
   --table-id <TABLE_ID> --hypotheses hypotheses.md
 
 # Segment from CSV
-python3 skills/extruct-list-segmentation/scripts/segment_list.py \
+python3 skills/capabilities/extruct-list-segmentation/scripts/segment_list.py \
   --input leads-enriched.csv --hypotheses hypotheses.md
 
 # Custom output path
-python3 skills/extruct-list-segmentation/scripts/segment_list.py \
+python3 skills/capabilities/extruct-list-segmentation/scripts/segment_list.py \
   --table-id <TABLE_ID> --hypotheses hypotheses.md \
   --output output/campaign-segmented.csv
 ```

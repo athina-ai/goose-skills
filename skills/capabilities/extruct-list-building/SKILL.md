@@ -17,7 +17,7 @@ Build company lists using Extruct's company discovery API, guided by a decision 
 ### Extruct API Token
 
 Get your API token from [Extruct Settings](https://app.extruct.ai/settings). Add to `.env`:
-```
+```bash
 EXTRUCT_API_TOKEN=your-token-here
 ```
 
@@ -45,7 +45,7 @@ Deep Search costs 2× because each verified result requires deeper research — 
 
 Before running any queries, determine the right approach:
 
-```
+```text
 Have a seed company from win cases or context file?
   YES → Lookalike Search (pass seed domain)
   NO  ↓
@@ -154,26 +154,26 @@ This skill includes Python scripts for automated list building:
 
 ```bash
 # Semantic search
-python3 skills/extruct-list-building/scripts/list_builder.py \
+python3 skills/capabilities/extruct-list-building/scripts/list_builder.py \
   --mode search --query "AI procurement startups" --limit 50
 
 # Lookalike search
-python3 skills/extruct-list-building/scripts/list_builder.py \
+python3 skills/capabilities/extruct-list-building/scripts/list_builder.py \
   --mode lookalike --seed stripe.com --limit 50
 
 # Deep Search with criteria
-python3 skills/extruct-list-building/scripts/list_builder.py \
+python3 skills/capabilities/extruct-list-building/scripts/list_builder.py \
   --mode deep --query "vertical SaaS for freight" --num-results 25
 
 # With filters, upload to table, and custom output
-python3 skills/extruct-list-building/scripts/list_builder.py \
+python3 skills/capabilities/extruct-list-building/scripts/list_builder.py \
   --mode search --query "enterprise sales AI" --limit 200 \
   --filters '{"include":{"country":["United States"]}}' \
   --upload --table-name "US Sales AI" \
   --output output/us-sales-ai.csv
 
 # Dry run (cost estimate only)
-python3 skills/extruct-list-building/scripts/list_builder.py \
+python3 skills/capabilities/extruct-list-building/scripts/list_builder.py \
   --mode deep --query "..." --num-results 50 --dry-run
 ```
 

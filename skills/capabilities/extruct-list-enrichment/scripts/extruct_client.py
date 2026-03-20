@@ -31,6 +31,10 @@ class ExtructClient:
     """Thin REST client for the Extruct API."""
 
     def __init__(self, api_token, base_url=BASE_URL):
+        if not base_url.startswith("https://"):
+            raise ValueError(
+                f"base_url must use HTTPS to protect the API token: {base_url}"
+            )
         self.api_token = api_token
         self.base_url = base_url.rstrip("/")
         self.headers = {

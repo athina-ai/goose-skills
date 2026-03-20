@@ -17,7 +17,7 @@ Add research-powered enrichment columns to Extruct company tables. Each column r
 ### Extruct API Token
 
 Get your API token from [Extruct Settings](https://app.extruct.ai/settings). Add to `.env`:
-```
+```bash
 EXTRUCT_API_TOKEN=your-token-here
 ```
 
@@ -128,29 +128,29 @@ This skill includes Python scripts for automated enrichment:
 
 ```bash
 # Add a single text column
-python3 skills/extruct-list-enrichment/scripts/enrich_table.py \
+python3 skills/capabilities/extruct-list-enrichment/scripts/enrich_table.py \
   --table-id <TABLE_ID> \
   --column-name "Latest Funding" \
   --prompt "What is the latest funding round for {input}?" \
   --format text
 
 # Add a select column with labels
-python3 skills/extruct-list-enrichment/scripts/enrich_table.py \
+python3 skills/capabilities/extruct-list-enrichment/scripts/enrich_table.py \
   --table-id <TABLE_ID> \
   --column-name "Primary Vertical" \
   --prompt "What vertical does {input} operate in?" \
   --format select --labels "SaaS,FinTech,HealthTech,EdTech,Other"
 
 # Add multiple columns from a config file
-python3 skills/extruct-list-enrichment/scripts/enrich_table.py \
+python3 skills/capabilities/extruct-list-enrichment/scripts/enrich_table.py \
   --table-id <TABLE_ID> --config columns.json
 
 # Test batch (10 rows only)
-python3 skills/extruct-list-enrichment/scripts/enrich_table.py \
+python3 skills/capabilities/extruct-list-enrichment/scripts/enrich_table.py \
   --table-id <TABLE_ID> --column-name "..." --prompt "..." --test
 
 # Dry run (cost estimate only)
-python3 skills/extruct-list-enrichment/scripts/enrich_table.py \
+python3 skills/capabilities/extruct-list-enrichment/scripts/enrich_table.py \
   --table-id <TABLE_ID> --column-name "..." --prompt "..." --dry-run
 ```
 

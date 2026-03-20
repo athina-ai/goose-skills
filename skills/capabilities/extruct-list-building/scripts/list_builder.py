@@ -110,7 +110,7 @@ def remove_dnc(companies, dnc_domains):
     dnc_set = {d.strip().lower() for d in dnc_domains}
     filtered = [
         c for c in companies
-        if (c.get("domain") or "").strip().lower() not in dnc_set
+        if (c.get("domain") or c.get("website") or "").strip().lower() not in dnc_set
     ]
     return filtered, len(companies) - len(filtered)
 
@@ -164,6 +164,9 @@ def run_deep_search(client, query, num_results, criteria=None):
     print(f"  Creating Deep Search task ({num_results} results)...")
     task = client.deep_search_create(query, num_results=num_results, criteria=criteria)
     task_id = task.get("id") or task.get("task_id")
+    if not task_id:
+        print(f"Error: Deep Search create returned no task ID: {task}")
+        sys.exit(1)
     print(f"  Task ID: {task_id}")
     print(f"  Polling until complete...")
 
@@ -311,7 +314,13 @@ def main():
         sys.exit(1)
 
     # Parse filters
-    filters = json.loads(args.filters) if args.filters else None
+    filters = None
+    if args.filters:
+        try:
+            filters = json.loads(args.filters)
+        except json.JSONDecodeError as e:
+            print(f"Error: invalid --filters JSON: {e}")
+            sys.exit(1)
 
     # Run search
     print(f"\n  Running {args.mode}...")

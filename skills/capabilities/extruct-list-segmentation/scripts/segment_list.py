@@ -188,16 +188,17 @@ def match_hypothesis(company, hypotheses):
 
     for hyp in hypotheses:
         score = 0
-        # Check if hypothesis keywords appear in company data
-        keywords = re.findall(r'\b\w{4,}\b', hyp["description"].lower())
+        # Use deduplicated word tokens with word boundary matching
+        keywords = set(re.findall(r'\b\w{4,}\b', hyp["description"].lower()))
         for kw in keywords:
-            if kw in company_text:
+            if re.search(r'\b' + re.escape(kw) + r'\b', company_text):
                 score += 1
 
         if hyp["best_fit"]:
-            fit_words = re.findall(r'\b\w{4,}\b', hyp["best_fit"].lower())
+            fit_words = set(re.findall(r'\b\w{4,}\b', hyp["best_fit"].lower()))
+            fit_words -= keywords  # Don't double-count words already scored
             for fw in fit_words:
-                if fw in company_text:
+                if re.search(r'\b' + re.escape(fw) + r'\b', company_text):
                     score += 2  # Best-fit matches count double
 
         if score > best_score:
@@ -221,6 +222,9 @@ def main():
     source.add_argument("--input", help="Input CSV file path")
     parser.add_argument("--hypotheses", required=True, help="Path to hypothesis set markdown file")
     parser.add_argument("--output", "-o", help="Output CSV path")
+    parser.add_argument("--dry-run", action="store_true", help="Show summary without writing output")
+    parser.add_argument("--test", action="store_true", help="Process first 10 companies only")
+    parser.add_argument("--yes", action="store_true", help="Skip confirmation")
 
     args = parser.parse_args()
 
@@ -250,6 +254,15 @@ def main():
         companies = load_from_csv(args.input)
 
     print(f"  Companies loaded: {len(companies)}")
+
+    if args.test:
+        companies = companies[:10]
+        print(f"  Test mode: processing first {len(companies)} companies only")
+
+    if args.dry_run:
+        print(f"\n  Dry run — {len(companies)} companies would be segmented against {len(hypotheses)} hypotheses.")
+        print(f"  Cost: $0 (no Extruct API credits consumed)")
+        sys.exit(0)
 
     # Segment
     segmented = []
@@ -305,10 +318,21 @@ def main():
     fieldnames = ["company_name", "domain", "tier", "hypothesis_number",
                   "hypothesis_name", "tier_rationale", "hook_signal"]
 
+    # Escape spreadsheet formula injection in string cells
+    def sanitize_cell(val):
+        if isinstance(val, str) and val and val[0] in ("=", "+", "-", "@", "\t", "\r"):
+            return "'" + val
+        return val
+
+    safe_rows = [
+        {k: sanitize_cell(v) for k, v in row.items()}
+        for row in segmented
+    ]
+
     with open(output_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
-        writer.writerows(segmented)
+        writer.writerows(safe_rows)
 
     print(f"  Output: {output_path}")
     print(f"\n  Cost: $0 (no Extruct API credits consumed)")
