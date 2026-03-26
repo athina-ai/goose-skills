@@ -1,10 +1,10 @@
 ---
 name: aeo-audit
 description: >
-  Audit a website for AI search readability. Scrapes pages and scores each one across
-  6 dimensions: positioning clarity, structured content, query alignment, technical signals,
-  content depth, and comparison content.
-tags: [seo, aeo]
+  Run a Goose AEO website audit — scrapes your website pages and scores each one for AI search readability
+  across 6 dimensions (positioning clarity, structured content, query alignment, technical signals, content depth,
+  comparison content). Uses npx goose-aeo CLI.
+tags: [seo]
 ---
 
 You are running a Goose AEO website audit for the user. This scrapes their website pages and scores each one for AI search readability across 6 dimensions.

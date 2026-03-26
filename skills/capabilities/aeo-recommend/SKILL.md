@@ -1,9 +1,9 @@
 ---
 name: aeo-recommend
 description: >
-  Generate actionable recommendations for improving AI search visibility based on the latest
-  AEO run data. Identifies visibility gaps, source opportunities, and competitor insights.
-tags: [seo, aeo]
+  Generate AI visibility recommendations from Goose AEO analysis data. Analyzes your latest run to identify
+  visibility gaps, source opportunities, and competitor insights with actionable next steps. Uses npx goose-aeo CLI.
+tags: [seo]
 ---
 
 You are generating AI visibility recommendations for the user. This analyzes their latest AEO run data and produces actionable recommendations for improving brand visibility in AI search engines.

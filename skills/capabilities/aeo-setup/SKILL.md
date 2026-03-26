@@ -1,9 +1,9 @@
 ---
 name: aeo-setup
 description: >
-  Set up Goose AEO (Answer Engine Optimization) for a domain. Walks through configuration,
-  API keys, competitor discovery, and query generation interactively.
-tags: [seo, aeo]
+  Set up Goose AEO (Answer Engine Optimization) for a domain. Interactive setup that asks for your domain,
+  detects competitors, configures AI search providers, and generates test queries. Uses npx goose-aeo CLI.
+tags: [seo]
 ---
 
 You are setting up Goose AEO (Answer Engine Optimization) for a user. AEO tracks how visible their company is across AI search engines like ChatGPT, Perplexity, Gemini, Grok, Claude, and DeepSeek.
@@ -26,12 +26,6 @@ Ask the user for the following. Be conversational — you can ask these in one m
 Do NOT proceed until you have at least the company domain.
 
 ## Step 2: Check Prerequisites
-
-Build the CLI if needed:
-
-```bash
-ls packages/cli/dist/index.js 2>/dev/null || npm run build
-```
 
 Check which API keys are available:
 ```bash
@@ -113,11 +107,15 @@ Tell the user:
 - Each run will cost approximately $X (based on queries x providers — rough estimate: 50 queries x 3 providers ~ $2-5)
 - They can view results in a dashboard after running
 
-Ask if they want to run their first analysis right now. If yes, proceed with the `/aeo-run` flow.
+If the user initialized inside a client subdirectory (e.g., `gooseworks/`, `athina/`), remind them that the dashboard can be opened from the parent directory with:
+```bash
+npx goose-aeo dashboard <client-dir>
+```
+
+Ask if they want to run their first analysis right now. If yes, proceed with the `/aeo-run` flow (run the commands from that skill inline).
 
 ## Error Handling
 
-- If `npm run build` fails, show the error and ask the user to check their Node.js version (requires >= 20).
-- If init fails, show the error. Common issues: missing API keys, invalid domain format.
+- If init fails, show the error. Common issues: missing API keys, invalid domain format, Node.js version < 20.
 - If query generation fails, it usually means the OpenAI API key is missing or invalid.
 - Never silently swallow errors — always show them to the user and suggest a fix.

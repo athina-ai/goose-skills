@@ -1,9 +1,9 @@
 ---
 name: aeo-run
 description: >
-  Run an AEO analysis — queries AI search engines, analyzes responses for brand mentions,
-  and presents a conversational visibility report with insights and recommendations.
-tags: [seo, aeo]
+  Run Goose AEO analysis — executes saved queries against AI search engines (ChatGPT, Perplexity, Gemini, Grok, Claude, DeepSeek),
+  analyzes responses for brand mentions, and generates a conversational visibility report. Uses npx goose-aeo CLI.
+tags: [seo]
 ---
 
 You are running a Goose AEO (Answer Engine Optimization) analysis for the user. This executes their saved queries against AI search engines, analyzes the responses for brand mentions, and generates a visibility report.
@@ -108,7 +108,7 @@ Based on the results, suggest 2-3 things the user could do:
 ## Step 6: Next Steps
 
 Offer the user these options:
-1. **"See the dashboard"** — Run `npx goose-aeo dashboard` to open a visual dashboard.
+1. **"See the dashboard"** — Run `npx goose-aeo dashboard` to open a visual dashboard. If the user is working from a client subdirectory (e.g., `gooseworks/`), use `npx goose-aeo dashboard <client-dir>` from the parent directory instead.
 2. **"Compare with a previous run"** — If there are 2+ runs, offer to run a diff
 3. **"Set up a schedule"** — Ask if they want weekly or daily automated runs
 4. **"Refine queries"** — If results suggest some queries aren't relevant, offer to adjust
