@@ -15,7 +15,11 @@
     "skills": {
       "type": "array",
       "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-      "minItems": 1,
+      "uniqueItems": true
+    },
+    "registry_skills": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
       "uniqueItems": true
     },
     "shared_files": {

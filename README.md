@@ -18,7 +18,7 @@ Install a curated group of related skills with one command:
 npx goose-skills install lead-gen-devtools
 ```
 
-Packs install each sub-skill independently to `~/.claude/skills/<skill>/`. Works with all platform targets:
+Packs install each sub-skill independently to `~/.claude/skills/<skill>/`. Packs can include their own skills and/or reference existing skills from the registry. Works with all platform targets:
 
 ```bash
 npx goose-skills install lead-gen-devtools --codex

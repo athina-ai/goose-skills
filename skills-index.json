@@ -3560,7 +3560,7 @@
       "slug": "lead-gen-devtools",
       "name": "Lead Gen DevTools",
       "type": "pack",
-      "description": "6-skill lead generation toolkit: discovery orchestrator, GitHub repo signals, community signals, competitor signals, event signals, and personalized demo builder.",
+      "description": "7-skill lead generation toolkit: discovery orchestrator, GitHub repo signals, community signals, competitor signals, event signals, hiring signal outreach, and personalized demo builder.",
       "tags": "lead-generation, research, competitive-intel",
       "path": "skills/packs/lead-gen-devtools",
       "shared_files": [
@@ -3575,7 +3575,8 @@
           "path": "skills/packs/lead-gen-devtools/lead-discovery",
           "files": [
             "skills/packs/lead-gen-devtools/lead-discovery/SKILL.md"
-          ]
+          ],
+          "source": "pack"
         },
         {
           "slug": "github-repo-signals",
@@ -3594,7 +3595,8 @@
             "skills/packs/lead-gen-devtools/github-repo-signals/scripts/gh_repo_signals.py",
             "skills/packs/lead-gen-devtools/github-repo-signals/scripts/gh_stars_forks.py",
             "skills/packs/lead-gen-devtools/github-repo-signals/scripts/gh_techstack.py"
-          ]
+          ],
+          "source": "pack"
         },
         {
           "slug": "community-signals",
@@ -3604,7 +3606,8 @@
           "files": [
             "skills/packs/lead-gen-devtools/community-signals/SKILL.md",
             "skills/packs/lead-gen-devtools/community-signals/scripts/community_signals.py"
-          ]
+          ],
+          "source": "pack"
         },
         {
           "slug": "competitor-signals",
@@ -3614,7 +3617,8 @@
           "files": [
             "skills/packs/lead-gen-devtools/competitor-signals/SKILL.md",
             "skills/packs/lead-gen-devtools/competitor-signals/scripts/competitor_signals.py"
-          ]
+          ],
+          "source": "pack"
         },
         {
           "slug": "event-signals",
@@ -3624,7 +3628,8 @@
           "files": [
             "skills/packs/lead-gen-devtools/event-signals/SKILL.md",
             "skills/packs/lead-gen-devtools/event-signals/scripts/event_signals.py"
-          ]
+          ],
+          "source": "pack"
         },
         {
           "slug": "demo-builder",
@@ -3633,13 +3638,25 @@
           "path": "skills/packs/lead-gen-devtools/demo-builder",
           "files": [
             "skills/packs/lead-gen-devtools/demo-builder/SKILL.md"
-          ]
+          ],
+          "source": "pack"
+        },
+        {
+          "slug": "hiring-signal-outreach",
+          "name": "hiring-signal-outreach",
+          "description": ">",
+          "path": "skills/composites/hiring-signal-outreach",
+          "files": [
+            "skills/composites/hiring-signal-outreach/SKILL.md",
+            "skills/composites/hiring-signal-outreach/skill.meta.json"
+          ],
+          "source": "registry"
         }
       ],
       "metadata": {
         "slug": "lead-gen-devtools",
         "name": "Lead Gen DevTools",
-        "description": "6-skill lead generation toolkit: discovery orchestrator, GitHub repo signals, community signals, competitor signals, event signals, and personalized demo builder.",
+        "description": "7-skill lead generation toolkit: discovery orchestrator, GitHub repo signals, community signals, competitor signals, event signals, hiring signal outreach, and personalized demo builder.",
         "tags": [
           "lead-generation",
           "research",
@@ -3652,6 +3669,9 @@
           "competitor-signals",
           "event-signals",
           "demo-builder"
+        ],
+        "registry_skills": [
+          "hiring-signal-outreach"
         ],
         "shared_files": [
           ".env.example",

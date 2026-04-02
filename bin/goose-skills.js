@@ -106,15 +106,19 @@ async function installPack(pack, options) {
 
   for (const subSkill of pack.skills) {
     const installDir = getInstallDir(subSkill.slug);
-    console.log(`  ${subSkill.slug} → ${installDir}`);
+    const isRegistry = subSkill.source === 'registry';
+    const label = isRegistry ? `${subSkill.slug} (registry)` : subSkill.slug;
+    console.log(`  ${label} → ${installDir}`);
     fs.mkdirSync(installDir, { recursive: true });
 
     await downloadSkillFiles(subSkill, installDir);
 
-    // Copy shared files into each sub-skill directory
-    for (const [filename, content] of Object.entries(sharedContents)) {
-      fs.writeFileSync(path.join(installDir, filename), content);
-      console.log(`    ${filename} (shared)`);
+    // Copy shared files into pack-local skills only (registry skills are self-contained)
+    if (!isRegistry) {
+      for (const [filename, content] of Object.entries(sharedContents)) {
+        fs.writeFileSync(path.join(installDir, filename), content);
+        console.log(`    ${filename} (shared)`);
+      }
     }
 
     if (target === 'codex') {

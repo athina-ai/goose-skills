@@ -83,9 +83,14 @@ function scanCategory(category) {
   return skills;
 }
 
-function scanPacks() {
+function scanPacks(registrySkills) {
   const packsDir = path.join(ROOT, 'skills', 'packs');
   if (!fs.existsSync(packsDir)) return [];
+
+  const registryBySlug = {};
+  for (const s of registrySkills) {
+    registryBySlug[s.slug] = s;
+  }
 
   const packs = [];
   const slugs = fs.readdirSync(packsDir).filter((d) =>
@@ -100,9 +105,9 @@ function scanPacks() {
 
     const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
 
-    // Build sub-skill entries
+    // Build pack-local sub-skill entries
     const subSkills = [];
-    for (const skillSlug of meta.skills) {
+    for (const skillSlug of (meta.skills || [])) {
       const skillDir = path.join(packDir, skillSlug);
       const skillMd = path.join(skillDir, 'SKILL.md');
 
@@ -120,6 +125,23 @@ function scanPacks() {
         description: frontmatter.description || '',
         path: `skills/packs/${slug}/${skillSlug}`,
         files: allFiles,
+        source: 'pack',
+      });
+    }
+
+    // Resolve registry skill references
+    for (const regSlug of (meta.registry_skills || [])) {
+      const regSkill = registryBySlug[regSlug];
+      if (!regSkill) {
+        throw new Error(`Pack "${slug}": registry_skills references unknown skill "${regSlug}"`);
+      }
+      subSkills.push({
+        slug: regSkill.slug,
+        name: regSkill.name,
+        description: regSkill.description,
+        path: regSkill.path,
+        files: regSkill.files,
+        source: 'registry',
       });
     }
 
@@ -150,7 +172,7 @@ const skills = [
   ...scanCategory('playbooks'),
 ].sort((a, b) => a.slug.localeCompare(b.slug));
 
-const packs = scanPacks().sort((a, b) => a.slug.localeCompare(b.slug));
+const packs = scanPacks(skills).sort((a, b) => a.slug.localeCompare(b.slug));
 
 // Validate no slug collisions between packs and skills
 const skillSlugs = new Set(skills.map((s) => s.slug));

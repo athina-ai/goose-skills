@@ -1,8 +1,12 @@
 {
   "slug": "lead-gen-devtools",
   "name": "Lead Gen DevTools",
-  "description": "6-skill lead generation toolkit: discovery orchestrator, GitHub repo signals, community signals, competitor signals, event signals, and personalized demo builder.",
-  "tags": ["lead-generation", "research", "competitive-intel"],
+  "description": "7-skill lead generation toolkit: discovery orchestrator, GitHub repo signals, community signals, competitor signals, event signals, hiring signal outreach, and personalized demo builder.",
+  "tags": [
+    "lead-generation",
+    "research",
+    "competitive-intel"
+  ],
   "skills": [
     "lead-discovery",
     "github-repo-signals",
@@ -11,9 +15,19 @@
     "event-signals",
     "demo-builder"
   ],
-  "shared_files": [".env.example", "requirements.txt"],
+  "registry_skills": [
+    "hiring-signal-outreach"
+  ],
+  "shared_files": [
+    ".env.example",
+    "requirements.txt"
+  ],
   "installation": {
     "base_command": "npx goose-skills install lead-gen-devtools",
-    "supports": ["claude", "cursor", "codex"]
+    "supports": [
+      "claude",
+      "cursor",
+      "codex"
+    ]
   }
 }
