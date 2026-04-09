@@ -145,13 +145,19 @@ class LumaApifyClient:
     """
 
     ACTOR_ID = "lexis-solutions~lu-ma-scraper"
-    BASE_URL = "https://api.apify.com/v2"
+    _GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+    _GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+    if _GOOSEWORKS_API_KEY:
+        BASE_URL = f"{_GOOSEWORKS_API_BASE}/v1/proxy/apify"
+    else:
+        BASE_URL = "https://api.apify.com/v2"
 
     def __init__(self, api_token: Optional[str] = None):
-        self.api_token = api_token or os.getenv("APIFY_API_TOKEN")
+        self.api_token = api_token or self._GOOSEWORKS_API_KEY or os.getenv("APIFY_API_TOKEN")
         if not self.api_token:
             raise ValueError(
-                "APIFY_API_TOKEN not set. Get one at: https://console.apify.com/account/integrations"
+                "Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN env var."
             )
 
     def _run_actor(self, run_input: Dict, timeout: int = 180) -> List[Dict]:

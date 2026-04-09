@@ -59,7 +59,13 @@ TMP_DIR = PROJECT_ROOT / ".tmp"
 HN_ALGOLIA_BASE = "https://hn.algolia.com/api/v1"
 HN_RATE_DELAY = 0.1  # 10,000 req/hr = ~2.7/sec, 0.1s is safe
 
-APIFY_BASE = "https://api.apify.com/v2"
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    APIFY_BASE = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    APIFY_BASE = "https://api.apify.com/v2"
 APIFY_ACTOR_ID = "oAuCIx3ItNrs2okjQ"  # trudax/reddit-scraper-lite
 APIFY_POLL_INTERVAL = 10  # seconds
 APIFY_MAX_WAIT = 1200  # 20 minutes
@@ -79,7 +85,7 @@ SIGNAL_CATEGORIES = {
 
 
 def load_apify_key():
-    """Load Apify API token from environment."""
+    """Load API token, preferring GooseWorks proxy key."""
     if load_dotenv:
         for env_path in [
             PROJECT_ROOT / ".env",
@@ -89,9 +95,9 @@ def load_apify_key():
                 load_dotenv(env_path)
                 break
 
-    key = os.environ.get("APIFY_API_TOKEN", "")
+    key = GOOSEWORKS_API_KEY or os.environ.get("APIFY_API_TOKEN", "")
     if not key:
-        print("[error] APIFY_API_TOKEN not found in environment or .env file", file=sys.stderr)
+        print("Error: Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN env var.", file=sys.stderr)
         sys.exit(1)
     return key
 

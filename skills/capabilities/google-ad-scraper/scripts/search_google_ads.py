@@ -20,17 +20,24 @@ from urllib.parse import quote
 
 
 ACTOR_ID = "burbn~google-ads-search"
-BASE_URL = "https://api.apify.com/v2"
+
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    BASE_URL = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    BASE_URL = "https://api.apify.com/v2"
 
 # Google Ads Transparency Center base URL (used for advertiser ID resolution)
 GADS_BASE = "https://adstransparency.google.com"
 
 
 def get_token(cli_token=None):
-    """Get Apify API token from CLI arg or APIFY_API_TOKEN env var."""
-    token = cli_token or os.environ.get("APIFY_API_TOKEN")
+    """Get API token from CLI arg, GOOSEWORKS_API_KEY, or APIFY_API_TOKEN env var."""
+    token = cli_token or GOOSEWORKS_API_KEY or os.environ.get("APIFY_API_TOKEN")
     if not token:
-        print("Error: Apify token required. Use --token or set APIFY_API_TOKEN env var.", file=sys.stderr)
+        print("Error: Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN env var.", file=sys.stderr)
         sys.exit(1)
     return token
 

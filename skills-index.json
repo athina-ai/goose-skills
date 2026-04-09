@@ -120,6 +120,7 @@
       "path": "skills/capabilities/apollo-lead-finder",
       "files": [
         "skills/capabilities/apollo-lead-finder/SKILL.md",
+        "skills/capabilities/apollo-lead-finder/scripts/apollo_client.py",
         "skills/capabilities/apollo-lead-finder/skill.meta.json"
       ],
       "metadata": {

@@ -40,7 +40,13 @@ except ImportError:
 
 # --- Constants ---
 ACTOR_ID = "supreme_coder~linkedin-profile-scraper"
-BASE_URL = "https://api.apify.com/v2"
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    BASE_URL = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    BASE_URL = "https://api.apify.com/v2"
 COST_PER_1K = 3.00  # $3 per 1,000 profiles
 ACTOR_URL = "https://console.apify.com/actors/supreme_coder~linkedin-profile-scraper"
 
@@ -467,10 +473,9 @@ Environment:
         sys.exit(0)
 
     # Check API token
-    api_token = os.getenv("APIFY_API_TOKEN")
+    api_token = GOOSEWORKS_API_KEY or os.getenv("APIFY_API_TOKEN")
     if not api_token:
-        print("Error: APIFY_API_TOKEN not set")
-        print("Get token: https://console.apify.com/account/integrations")
+        print("Error: Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN env var.")
         sys.exit(1)
 
     if need_enrichment == 0 and cached_count > 0:

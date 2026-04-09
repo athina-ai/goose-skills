@@ -30,7 +30,13 @@ HEADERS = {
     "User-Agent": "ConferenceSpeakerScraper/1.0"
 }
 
-APIFY_BASE = "https://api.apify.com/v2"
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    APIFY_BASE = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    APIFY_BASE = "https://api.apify.com/v2"
 
 # Speaker-related CSS class patterns
 SPEAKER_CLASS_PATTERNS = [
@@ -256,10 +262,10 @@ def scrape_direct(url, conference_name):
 # ---------------------------------------------------------------------------
 
 def get_apify_token(token_arg=None):
-    """Get Apify API token."""
-    token = token_arg or os.environ.get("APIFY_API_TOKEN")
+    """Get API token from arg, GOOSEWORKS_API_KEY, or APIFY_API_TOKEN env var."""
+    token = token_arg or GOOSEWORKS_API_KEY or os.environ.get("APIFY_API_TOKEN")
     if not token:
-        print("ERROR: Apify mode requires APIFY_API_TOKEN. Set it or use --token.", file=sys.stderr)
+        print("Error: Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN env var.", file=sys.stderr)
         sys.exit(1)
     return token
 

@@ -97,7 +97,12 @@ else:
         sys.exit(1)
 
     _ACTOR_ID = "supreme_coder~linkedin-profile-scraper"
-    _BASE_URL = "https://api.apify.com/v2"
+    _GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+    _GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+    if _GOOSEWORKS_API_KEY:
+        _BASE_URL = f"{_GOOSEWORKS_API_BASE}/v1/proxy/apify"
+    else:
+        _BASE_URL = "https://api.apify.com/v2"
     _COST_PER_1K = 3.00
 
     def normalize_linkedin_url(url: str) -> str:
@@ -597,10 +602,9 @@ def cmd_init(args):
         return
 
     # Check API token
-    api_token = os.getenv("APIFY_API_TOKEN")
+    api_token = os.getenv("GOOSEWORKS_API_KEY") or os.getenv("APIFY_API_TOKEN")
     if not api_token:
-        print("Error: APIFY_API_TOKEN not set")
-        print("Get token: https://console.apify.com/account/integrations")
+        print("Error: Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN env var.", file=sys.stderr)
         sys.exit(1)
 
     # Cost confirmation
@@ -728,9 +732,9 @@ def cmd_check(args):
         return
 
     # Check API token
-    api_token = os.getenv("APIFY_API_TOKEN")
+    api_token = os.getenv("GOOSEWORKS_API_KEY") or os.getenv("APIFY_API_TOKEN")
     if not api_token:
-        print("Error: APIFY_API_TOKEN not set")
+        print("Error: Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN env var.", file=sys.stderr)
         sys.exit(1)
 
     if not unique_urls:

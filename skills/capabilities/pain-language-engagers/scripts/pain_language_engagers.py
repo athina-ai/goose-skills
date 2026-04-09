@@ -44,6 +44,14 @@ from tools.apify_guard import (
     ApifyLimitReached, get_run_count, get_run_limit,
 )
 
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    APIFY_BASE = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    APIFY_BASE = "https://api.apify.com/v2"
+
 # ── Apify Actor IDs ──────────────────────────────────────────────────────────
 
 POST_SEARCH_ACTOR_ID = "apimaestro~linkedin-posts-search-scraper-no-cookies"  # no cookies needed
@@ -129,7 +137,7 @@ def load_env():
 
 def apify_dataset(run_id, token, limit=50000):
     """Fetch dataset items from a completed run."""
-    url = f"https://api.apify.com/v2/actor-runs/{run_id}/dataset/items?token={token}&limit={limit}"
+    url = f"{APIFY_BASE}/actor-runs/{run_id}/dataset/items?token={token}&limit={limit}"
     return json.load(urllib.request.urlopen(url, timeout=120))
 
 
@@ -255,15 +263,15 @@ def discover_posts_and_companies(token, config, test_mode=False):
             items = apify_dataset(run_id, token, limit=500)
             new_posts = 0
             for item in items:
-                if item.get("type") != "post":
+                post_id = item.get("activity_id") or item.get("id") or item.get("full_urn", "")
+                if not post_id:
                     continue
-                post_id = item.get("id", "")
-                if post_id and post_id not in all_posts:
+                if post_id not in all_posts:
                     all_posts[post_id] = {**item, "_keyword": kw}
                     new_posts += 1
 
                     author = item.get("author", {})
-                    author_url = author.get("linkedinUrl", "")
+                    author_url = author.get("profile_url") or author.get("linkedinUrl", "")
                     company_url = extract_company_url(author_url)
                     if company_url:
                         discovered_companies.add(company_url)
@@ -292,10 +300,10 @@ def extract_post_authors(all_posts):
 
     for post_id, post in all_posts.items():
         author = post.get("author", {})
-        profile_url = author.get("linkedinUrl", "")
+        profile_url = author.get("profile_url") or author.get("linkedinUrl", "")
         name = author.get("name", "")
-        headline = author.get("info", "") or ""
-        post_url = post.get("linkedinUrl", "") or post.get("socialContent", {}).get("shareUrl", "")
+        headline = author.get("headline") or author.get("info", "") or ""
+        post_url = post.get("post_url") or post.get("linkedinUrl", "") or post.get("socialContent", {}).get("shareUrl", "")
         keyword = post.get("_keyword", "")
 
         if not profile_url or not name or "/company/" in profile_url:
@@ -578,7 +586,7 @@ def enrich_profiles(engagers, token, config, test_mode=False):
 
         try:
             cleaned_batch = [clean_profile_url(u) for u in batch]
-            payload = {"profileUrls": cleaned_batch}
+            payload = {"urls": cleaned_batch}
             run_id = guarded_apify_run(PROFILE_ACTOR_ID, payload, token, wait_secs=180)
             profiles = apify_dataset(run_id, token)
 
@@ -732,9 +740,9 @@ def main():
     extra_companies = [u.strip() for u in args.companies.split(",") if u.strip()] if args.companies else []
 
     env = load_env()
-    token = env.get("APIFY_API_TOKEN", "")
+    token = GOOSEWORKS_API_KEY or env.get("APIFY_API_TOKEN", "")
     if not token:
-        print("ERROR: APIFY_API_TOKEN not found in .env")
+        print("ERROR: Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN env var.")
         sys.exit(1)
 
     client_name = config["client_name"]

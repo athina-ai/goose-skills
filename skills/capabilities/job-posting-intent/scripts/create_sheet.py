@@ -4,11 +4,12 @@ Create a Google Sheet with job posting intent results via Rube/Composio API.
 """
 
 import json
+import os
 import sys
 import requests
 
 RUBE_URL = "https://rube.app"
-RUBE_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ1c2VyXzAxS0oxQkRITUgySEg1RlQ5RzYxWTdKR0E2Iiwib3JnSWQiOiJvcmdfMDFLSjFCREtEOUJLU1ZaOVc4VzNXNkc0ME0iLCJpYXQiOjE3NzE3MjI0OTJ9.LJlyfsJiBwFENPAuyKVSJ6YTFwQDmhz_JXJo03JdMvw"
+RUBE_TOKEN = os.getenv("RUBE_TOKEN", "")
 
 headers = {
     "Authorization": f"Bearer {RUBE_TOKEN}",
@@ -18,6 +19,10 @@ headers = {
 
 def call_rube_tool(tool_name, params):
     """Call a Composio tool via Rube's MCP endpoint."""
+    if not RUBE_TOKEN:
+        print("ERROR: RUBE_TOKEN environment variable is not set.")
+        print("Set it with: export RUBE_TOKEN='your_jwt_token_here'")
+        sys.exit(1)
     resp = requests.post(
         f"{RUBE_URL}/api/composio/execute",
         headers=headers,

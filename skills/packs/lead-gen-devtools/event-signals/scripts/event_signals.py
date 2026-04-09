@@ -52,7 +52,13 @@ TMP_DIR = PROJECT_ROOT / ".tmp"
 SESSIONIZE_BASE = "https://sessionize.com/api/v2"
 CONFSTECH_BASE = "https://raw.githubusercontent.com/tech-conferences/conference-data/main/conferences"
 LISTENNOTES_BASE = "https://listen-api.listennotes.com/api/v2"
-APIFY_BASE = "https://api.apify.com/v2"
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    APIFY_BASE = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    APIFY_BASE = "https://api.apify.com/v2"
 APIFY_MEETUP_ACTOR = "qaDijpjO2HlVfLvoE"  # automation-lab/meetup-scraper
 APIFY_LUMA_ACTOR = "matyascimbulka~luma-event-scraper"
 
@@ -83,7 +89,7 @@ def load_apify_key():
             if env_path.exists():
                 load_dotenv(env_path)
                 break
-    return os.environ.get("APIFY_API_TOKEN", "")
+    return GOOSEWORKS_API_KEY or os.environ.get("APIFY_API_TOKEN", "")
 
 
 def load_listennotes_key():

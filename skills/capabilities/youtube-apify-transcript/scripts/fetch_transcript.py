@@ -33,19 +33,21 @@ except ImportError:
 
 
 APIFY_ACTOR_ID = "pintostudio~youtube-transcript-scraper"
-APIFY_API_BASE = "https://api.apify.com/v2"
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    APIFY_API_BASE = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    APIFY_API_BASE = "https://api.apify.com/v2"
 CACHE_DIR = Path(os.environ.get("YT_TRANSCRIPT_CACHE_DIR", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".cache")))
 
 
 def get_api_token():
-    """Get APIFY API token from environment."""
-    token = os.environ.get("APIFY_API_TOKEN")
+    """Get API token, preferring GooseWorks proxy key."""
+    token = GOOSEWORKS_API_KEY or os.environ.get("APIFY_API_TOKEN")
     if not token:
-        print("Error: APIFY_API_TOKEN environment variable not set.", file=sys.stderr)
-        print("\nSetup instructions:", file=sys.stderr)
-        print("1. Create free account: https://apify.com/", file=sys.stderr)
-        print("2. Get API token: https://console.apify.com/account/integrations", file=sys.stderr)
-        print("3. Export: export APIFY_API_TOKEN='apify_api_YOUR_TOKEN'", file=sys.stderr)
+        print("Error: Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN env var.", file=sys.stderr)
         sys.exit(1)
     return token
 

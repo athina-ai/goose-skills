@@ -48,7 +48,13 @@ TMP_DIR = PROJECT_ROOT / ".tmp"
 
 HN_ALGOLIA_BASE = "https://hn.algolia.com/api/v1"
 PH_API_BASE = "https://api.producthunt.com/v2/api/graphql"
-APIFY_BASE = "https://api.apify.com/v2"
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    APIFY_BASE = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    APIFY_BASE = "https://api.apify.com/v2"
 APIFY_PH_ACTOR = "maximedupre~product-hunt-scraper"
 
 APIFY_POLL_INTERVAL = 10
@@ -78,6 +84,8 @@ def load_env_key(key_name):
             if env_path.exists():
                 load_dotenv(env_path)
                 break
+    if key_name == "APIFY_API_TOKEN":
+        return GOOSEWORKS_API_KEY or os.environ.get(key_name, "")
     return os.environ.get(key_name, "")
 
 

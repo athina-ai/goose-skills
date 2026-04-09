@@ -26,7 +26,13 @@ except ImportError:
     sys.exit(1)
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; ContentCatalogBot/1.0)"}
-APIFY_BASE = "https://api.apify.com/v2"
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    APIFY_BASE = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    APIFY_BASE = "https://api.apify.com/v2"
 SITEMAP_ACTOR = "onescales~sitemap-url-extractor"
 
 # --- Content Type Classification ---
@@ -657,7 +663,7 @@ def main():
     # Strip protocol if provided
     domain = args.domain.replace("https://", "").replace("http://", "").rstrip("/")
 
-    apify_token = args.apify_token or os.environ.get("APIFY_API_TOKEN")
+    apify_token = args.apify_token or GOOSEWORKS_API_KEY or os.environ.get("APIFY_API_TOKEN")
 
     result = catalog_domain(
         domain=domain,

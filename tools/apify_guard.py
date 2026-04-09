@@ -6,7 +6,16 @@ for cost confirmation before each batch of runs.
 """
 
 import json
+import os
 import urllib.request
+
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    _APIFY_BASE = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    _APIFY_BASE = "https://api.apify.com/v2"
 
 # ── Module-level state ──────────────────────────────────────────────────────
 
@@ -81,7 +90,7 @@ def guarded_apify_run(actor_id, run_input, token, timeout=300):
             "Use --max-runs to increase."
         )
 
-    url = f"https://api.apify.com/v2/acts/{actor_id}/runs?token={token}"
+    url = f"{_APIFY_BASE}/acts/{actor_id}/runs?token={token}"
     data = json.dumps(run_input).encode("utf-8")
     req = urllib.request.Request(url, data=data, method="POST")
     req.add_header("Content-Type", "application/json")
@@ -93,7 +102,7 @@ def guarded_apify_run(actor_id, run_input, token, timeout=300):
 
     # Poll until terminal state
     import time
-    poll_url = f"https://api.apify.com/v2/actor-runs/{run_id}?token={token}"
+    poll_url = f"{_APIFY_BASE}/actor-runs/{run_id}?token={token}"
     deadline = time.time() + timeout
     while status in ("READY", "RUNNING") and time.time() < deadline:
         time.sleep(5)

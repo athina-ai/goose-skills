@@ -23,6 +23,14 @@ import time
 import urllib.request
 from datetime import datetime, timezone
 
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    APIFY_BASE = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    APIFY_BASE = "https://api.apify.com/v2"
+
 # ── Config ──────────────────────────────────────────────────────────────────
 
 DKIM_SELECTORS = [
@@ -310,7 +318,7 @@ def scan_apify_profiler(domains, token):
     try:
         import requests
         resp = requests.post(
-            "https://api.apify.com/v2/acts/justa~technology-profiling-engine/runs",
+            f"{APIFY_BASE}/acts/justa~technology-profiling-engine/runs",
             json=payload,
             params={"token": token, "waitForFinish": 300},
             timeout=330,
@@ -327,7 +335,7 @@ def scan_apify_profiler(domains, token):
             for _ in range(60):
                 time.sleep(5)
                 check = requests.get(
-                    f"https://api.apify.com/v2/actor-runs/{run_id}",
+                    f"{APIFY_BASE}/actor-runs/{run_id}",
                     params={"token": token},
                 ).json()
                 status = check["data"]["status"]
@@ -340,7 +348,7 @@ def scan_apify_profiler(domains, token):
 
         dataset_id = run_data["defaultDatasetId"]
         ds_resp = requests.get(
-            f"https://api.apify.com/v2/datasets/{dataset_id}/items",
+            f"{APIFY_BASE}/datasets/{dataset_id}/items",
             params={"token": token},
         )
         items = ds_resp.json()
@@ -531,7 +539,7 @@ def main():
     # Get Apify token
     apify_token = None
     if not args.no_apify:
-        apify_token = os.environ.get("APIFY_API_TOKEN")
+        apify_token = GOOSEWORKS_API_KEY or os.environ.get("APIFY_API_TOKEN")
         if not apify_token:
             try:
                 from dotenv import load_dotenv
@@ -541,7 +549,7 @@ def main():
             except ImportError:
                 pass
         if not apify_token:
-            print("  Warning: APIFY_API_TOKEN not found. Skipping Apify profiler.")
+            print("  Warning: Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN. Skipping Apify profiler.")
             print("  Set it in .env or pass --no-apify for free-only mode.")
 
     # Run DNS + source scans for all domains

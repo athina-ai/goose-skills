@@ -5,12 +5,13 @@ Uses RUBE_REMOTE_WORKBENCH to run Composio tools for Google Sheets.
 """
 
 import json
+import os
 import sys
 import requests
 import uuid
 
 RUBE_MCP_URL = "https://rube.app/mcp"
-RUBE_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ1c2VyXzAxS0oxQkRITUgySEg1RlQ5RzYxWTdKR0E2Iiwib3JnSWQiOiJvcmdfMDFLSjFCREtEOUJLU1ZaOVc4VzNXNkc0ME0iLCJpYXQiOjE3NzE3MjI0OTJ9.LJlyfsJiBwFENPAuyKVSJ6YTFwQDmhz_JXJo03JdMvw"
+RUBE_TOKEN = os.getenv("RUBE_TOKEN", "")
 
 HEADERS = {
     "Authorization": f"Bearer {RUBE_TOKEN}",
@@ -24,6 +25,10 @@ session_id = None
 
 def mcp_call(method, params=None):
     """Make a JSON-RPC call to Rube MCP (SSE transport)."""
+    if not RUBE_TOKEN:
+        print("ERROR: RUBE_TOKEN environment variable is not set.")
+        print("Set it with: export RUBE_TOKEN='your_jwt_token_here'")
+        return None
     global session_id
     payload = {
         "jsonrpc": "2.0",

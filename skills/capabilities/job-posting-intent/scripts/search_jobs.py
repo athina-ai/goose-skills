@@ -34,7 +34,14 @@ except ImportError:
 
 
 ACTOR_ID = "harvestapi~linkedin-job-search"
-BASE_URL = "https://api.apify.com/v2"
+
+GOOSEWORKS_API_BASE = os.environ.get("GOOSEWORKS_API_BASE", "https://app.gooseworks.ai")
+GOOSEWORKS_API_KEY = os.environ.get("GOOSEWORKS_API_KEY")
+
+if GOOSEWORKS_API_KEY:
+    BASE_URL = f"{GOOSEWORKS_API_BASE}/v1/proxy/apify"
+else:
+    BASE_URL = "https://api.apify.com/v2"
 
 # Pricing constants
 COST_PER_JOB = 0.001      # $0.001 per job result
@@ -43,16 +50,14 @@ APIFY_MARGIN = 0.20        # 20% Apify platform margin
 
 # Rube MCP config for Google Sheets
 RUBE_MCP_URL = "https://rube.app/mcp"
-RUBE_TOKEN = os.getenv("RUBE_TOKEN", "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ1c2VyXzAxS0oxQkRITUgySEg1RlQ5RzYxWTdKR0E2Iiwib3JnSWQiOiJvcmdfMDFLSjFCREtEOUJLU1ZaOVc4VzNXNkc0ME0iLCJpYXQiOjE3NzE3MjI0OTJ9.LJlyfsJiBwFENPAuyKVSJ6YTFwQDmhz_JXJo03JdMvw")
+RUBE_TOKEN = os.getenv("RUBE_TOKEN", "")
 _mcp_session_id = None
 
 
 def get_token() -> str:
-    token = os.getenv("APIFY_API_TOKEN")
+    token = GOOSEWORKS_API_KEY or os.getenv("APIFY_API_TOKEN")
     if not token:
-        print("ERROR: APIFY_API_TOKEN not set.")
-        print("Get one at: https://console.apify.com/account/integrations")
-        print("Then: export APIFY_API_TOKEN='apify_api_...'")
+        print("Error: Set GOOSEWORKS_API_KEY or APIFY_API_TOKEN env var.", file=sys.stderr)
         sys.exit(1)
     return token
 
@@ -456,6 +461,10 @@ def qualify_and_build_rows(companies: Dict[str, dict], relevance_keywords: Optio
 
 def _mcp_call(method, params=None):
     """Make a JSON-RPC call to Rube MCP (SSE transport)."""
+    if not RUBE_TOKEN:
+        print("ERROR: RUBE_TOKEN environment variable is not set.")
+        print("Set it with: export RUBE_TOKEN='your_jwt_token_here'")
+        return None
     global _mcp_session_id
     payload = {
         "jsonrpc": "2.0",

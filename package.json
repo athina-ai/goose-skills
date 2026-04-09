@@ -10,7 +10,11 @@
     "url": "https://github.com/athina-ai/goose-skills"
   },
   "scripts": {
-    "test": "node --test",
+    "test": "node --test test/goose-skills-targets.test.js test/goose-skills-packs.test.js",
+    "test:eval": "node test/run-eval.js",
+    "test:eval:run": "node test/run-eval.js",
+    "test:eval:check": "node test/evaluate-run.js",
+    "test:eval:generate": "node scripts/generate-eval-prompts.js",
     "build:index": "node scripts/build-index.js",
     "validate:skills": "node scripts/validate-skills.js",
     "ci": "npm run validate:skills && npm run build:index && npm test"
