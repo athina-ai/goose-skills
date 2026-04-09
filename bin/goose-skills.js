@@ -190,6 +190,37 @@ async function installSkill(options) {
     process.exit(1);
   }
 
+  // Auto-install dependency skills (requires_skills)
+  const requiresSkills = skill.metadata?.requires_skills || [];
+  const installedDeps = [];
+  if (requiresSkills.length > 0) {
+    console.log(`\nInstalling ${requiresSkills.length} dependency skill(s) first...\n`);
+    for (const depSlug of requiresSkills) {
+      const depSkill = index.skills.find((s) => s.slug === depSlug);
+      if (!depSkill) {
+        console.error(`  [WARN] Dependency "${depSlug}" not found in index, skipping.`);
+        continue;
+      }
+      const depDir = getInstallDir(depSlug);
+      if (fs.existsSync(path.join(depDir, 'SKILL.md'))) {
+        console.log(`  ${depSlug} — already installed`);
+        installedDeps.push(depSlug);
+        continue;
+      }
+      console.log(`  ${depSlug} → ${depDir}`);
+      fs.mkdirSync(depDir, { recursive: true });
+      await downloadSkillFiles(depSkill, depDir);
+      installedDeps.push(depSlug);
+
+      if (target === 'codex') {
+        placeForCodex(depDir, getCodexSkillsRoot());
+      } else if (target === 'cursor') {
+        placeForCursor(depDir, projectDir);
+      }
+    }
+    console.log('');
+  }
+
   const installDir = getInstallDir(slug);
   console.log(`Installing ${skill.name} to ${installDir}...`);
 
@@ -199,6 +230,9 @@ async function installSkill(options) {
   const downloaded = await downloadSkillFiles(skill, installDir);
 
   console.log(`\nInstalled ${downloaded}/${skill.files.length} files.`);
+  if (installedDeps.length > 0) {
+    console.log(`Dependencies installed: ${installedDeps.join(', ')}`);
+  }
   console.log(`Primary location: ${installDir}`);
 
   if (target === 'codex') {
