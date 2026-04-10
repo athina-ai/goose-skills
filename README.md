@@ -1,15 +1,5 @@
 # Goose Skills
 
-> **This package is deprecated.** Use the [GooseWorks CLI](https://www.npmjs.com/package/gooseworks) instead:
->
-> ```bash
-> npx gooseworks install --claude
-> ```
->
-> One install gives you access to all 100+ skills. [Learn more](https://docs.gooseworks.ai/concepts/cli).
-
----
-
 GTM skills for [Claude Code](https://claude.ai/claude-code), [Cursor](https://cursor.sh), and [Codex](https://openai.com/codex). Ready-to-use skills for sales, marketing, competitive intelligence, SEO, and lead generation.
 
 ## Quick Install
