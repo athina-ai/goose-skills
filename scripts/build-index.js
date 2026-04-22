@@ -30,6 +30,7 @@ function parseFrontmatter(content) {
 
 const SKIP_DIRS = new Set(['.tmp', '__pycache__', 'node_modules', '.git']);
 const SKIP_EXTS = new Set(['.pyc', '.pyo']);
+const SKIP_FILES = new Set(['.DS_Store', 'Thumbs.db']);
 
 function collectFiles(dir) {
   const files = [];
@@ -41,6 +42,7 @@ function collectFiles(dir) {
       if (SKIP_DIRS.has(entry.name)) continue;
       files.push(...collectFiles(full));
     } else {
+      if (SKIP_FILES.has(entry.name)) continue;
       if (SKIP_EXTS.has(path.extname(entry.name))) continue;
       files.push(full);
     }
