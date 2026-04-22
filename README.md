@@ -5,7 +5,9 @@
 
 # Goose Skills
 
-**GTM skills for AI coding agents. Ready-to-use skills for sales, marketing, competitive intelligence, SEO, and lead generation.**
+**Growth & GTM skills for AI coding agents. Ready-to-use skills for sales, marketing, competitive intelligence, SEO, and lead generation.**
+
+Browse all skills at https://skills.gooseworks.ai
 
 Works with [Claude Code](https://claude.ai/claude-code) &middot; [Cursor](https://cursor.sh) &middot; [Codex](https://openai.com/codex)
 
@@ -45,6 +47,8 @@ npx gooseworks install --all       # All detected agents
 ```
 
 This gives your coding agent access to the **full catalog of 100+ skills**. After installing, just ask your agent to use any skill by name.
+
+> If you want a cloud-based AI coworker that already knows all these skills and more, sign up to [Gooseworks](https://app.gooseworks.ai)
 
 ---
 
