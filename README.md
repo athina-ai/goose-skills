@@ -13,7 +13,7 @@ Works with [Claude Code](https://claude.ai/claude-code) &middot; [Cursor](https:
 
 [![npm version](https://img.shields.io/npm/v/goose-skills?color=blue)](https://www.npmjs.com/package/goose-skills)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-104-orange)]()
+[![Skills](https://img.shields.io/badge/skills-108-orange)]()
 
 <br />
 
@@ -27,7 +27,7 @@ Works with [Claude Code](https://claude.ai/claude-code) &middot; [Cursor](https:
 
 - [Quick Start](#-quick-start)
 - [Commands](#-commands)
-- [Skills Catalog (104)](#-skills-catalog-104)
+- [Skills Catalog (108)](#-skills-catalog-108)
 - [Usage Examples](#-usage-examples)
 - [Building from Source](#-building-from-source)
 - [Skill Metadata Contract](#-skill-metadata-contract)
@@ -62,9 +62,9 @@ npx gooseworks update                      # Update to latest skill version
 
 ---
 
-## Skills Catalog (104)
+## Skills Catalog (108)
 
-**48 Capabilities** (atomic, single-purpose tools) &middot; **51 Composites** (multi-skill chains) &middot; **5 Playbooks** (end-to-end workflows)
+**51 Capabilities** (atomic, single-purpose tools) &middot; **52 Composites** (multi-skill chains) &middot; **5 Playbooks** (end-to-end workflows)
 
 ### Ads (9)
 
@@ -103,7 +103,7 @@ npx gooseworks update                      # Update to latest skill version
 | `seo-traffic-analyzer` | Cap | Website traffic and keyword analysis |
 | `tech-stack-teardown` | Cap | Reverse-engineer a company's sales/marketing tech stack |
 
-### Content (11)
+### Content (15)
 
 | Skill | Type | Description |
 |-------|------|-------------|
@@ -113,11 +113,15 @@ npx gooseworks update                      # Update to latest skill version
 | `content-brief-factory` | Comp | Detailed content briefs at scale with SERP analysis |
 | `create-html-carousel` | Cap | *(deprecated — use `goose-graphics`)* Create LinkedIn carousel posts as PNG images |
 | `create-html-slides` | Cap | *(deprecated — use `goose-graphics`)* Create animation-rich HTML presentations |
-| `goose-graphics` | Comp | 36 aesthetic presets across 7 formats (carousel, story, infographic, slides, poster, chart, tweet) with Unsplash/ASCII sourcing and Playwright PNG export |
+| `create-linkedin-content` | Cap | Draft voice-tuned LinkedIn post variants from a brief, with LinkedIn defaults and banned-phrase self-check |
 | `create-workflow-diagram` | Cap | Create FigJam/Miro-style workflow diagrams as PNGs |
+| `create-x-content` | Cap | Draft voice-tuned X/Twitter post variants with distinct framings and banned-phrase self-check |
 | `feature-launch-playbook` | Comp | Generate full launch kit from a feature/update |
+| `generate-voice-guide` | Cap | Generate a personal voice guide for X and/or LinkedIn from past posts via iterative sample-and-feedback loops |
+| `goose-graphics` | Comp | 36 aesthetic presets across 7 formats (carousel, story, infographic, slides, poster, chart, tweet) with Unsplash/ASCII sourcing and Playwright PNG export |
 | `help-center-article-generator` | Comp | Generate structured help center articles |
 | `site-content-catalog` | Cap | Full website content inventory |
+| `social-kit` | Comp | One command → voice-tuned X + LinkedIn drafts + matching graphic, orchestrating create-x-content, create-linkedin-content, and goose-graphics |
 
 ### Lead Generation (23)
 
