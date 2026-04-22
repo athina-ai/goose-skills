@@ -13,24 +13,28 @@ Everything is self-contained: format templates, style systems, image sourcing in
 
 ## 2. Invocation
 
-This skill supports **three invocation modes** — all-args, partial-args, and interactive. Pick the fastest path for the ask.
+This skill supports **four invocation modes** — all-args, partial-args, interactive, and create-style. Pick the fastest path for the ask.
 
 ### 2.1 Full-args invocation (fastest path)
 
 ```
 /goose-graphics --style <slug> --format <format> [--brief "..."] [--ref <image-path>]
+/goose-graphics --create-style --ref <image-path> [--style-name <slug>]
 ```
 
 - `--style <slug>` — one of the 36 preset slugs (see `styles/index.json` or §6). Required for style-selected generation. Omit to let the user pick interactively.
 - `--format <format>` — one of `carousel`, `story`, `infographic`, `slides`, `poster`, `chart`, `tweet`. Required for format-selected generation.
 - `--brief "..."` — the topic / content description. Replaces the Content Discovery phase.
 - `--ref <image-path>` — if present, extract a custom style from the reference image instead of using a preset. When `--ref` is provided, `--style` is ignored.
+- `--create-style` — create a custom style from a reference image **only** (no format selection, no HTML generation). Requires `--ref`. Optionally accepts `--style-name <slug>` to skip the naming prompt. The extracted style is saved to `styles/<name>.md` alongside the presets.
+- `--style-name <slug>` — used with `--create-style` to pre-set the custom style name (lowercase-kebab-case). Skips the naming prompt in the extract-style workflow.
 
-**Three branches:**
+**Four branches:**
 
 1. **All required args present** (`--style` + `--format` + `--brief` OR `--ref` + `--format` + `--brief`) → skip discovery, skip style selection, proceed directly to §7 (Set Output Path) and §8 (Generate HTML).
 2. **Partial args** → ask only for the missing pieces. If `--style` is set but `--format` is not, ask only for format. If `--brief` is missing, ask only for the topic/content.
 3. **No args** → run the interactive flow from §3 onward.
+4. **`--create-style` present** → read `styles/extract-style.md` and follow its workflow. Skip §6 (Discover Intent), §7 (Select Style preset list), §8-§12. The extract-style workflow handles everything including save. Stop after the style is saved — do not proceed to format selection or HTML generation.
 
 ### 2.2 Examples
 
@@ -46,6 +50,12 @@ This skill supports **three invocation modes** — all-args, partial-args, and i
 
 # No args — full interactive flow
 /goose-graphics
+
+# Create a custom style from a reference image (no HTML generation)
+/goose-graphics --create-style --ref ~/Desktop/mood.png
+
+# Create with a pre-chosen name
+/goose-graphics --create-style --ref ~/Desktop/mood.png --style-name sunset-editorial
 ```
 
 ### 2.3 Defaults when args are partial but unambiguous
@@ -174,7 +184,7 @@ Present the **36 style presets**, grouped by mood. The canonical list lives in `
 **Friendly Corporate**
 36. **Mint Pixel Corporate** — Pale mint + lime pixel-staircase corner decorations.
 
-The user may also say: **"I have a reference image"** — in that case, read `styles/extract-style.md` and follow its workflow to derive a custom style from the provided image.
+The user may also say: **"I have a reference image"** — in that case, read `styles/extract-style.md` and follow its workflow to derive a custom style in slim format from the provided image. The extracted style is saved to `styles/<name>.md` alongside the presets and is immediately usable. After the style is saved, continue the workflow from Step 3 onward using the newly created style.
 
 After the user selects a preset, read the corresponding style file from `styles/<slug>.md` (e.g., `styles/midnight-editorial.md`, `styles/heatwave-orange.md`). Each slim style file contains everything you need to generate: palette, typography, layout, do/don'ts, and ready-to-paste CSS snippets. For the full prose deep-dive (rare — use for extract-style prompting or when nuance is missing), read `styles/_full/<slug>.md`.
 
@@ -240,6 +250,7 @@ Present the results to the user:
 - **"Surprise me"** — Pick the carousel format and a random style preset from `styles/index.json`. Ask the user only for content/topic, then generate everything else automatically.
 - **Multi-format** — If the user says "make this as both a carousel and an infographic," run the full workflow twice using the same content and style but different format skills. Save outputs in separate subdirectories.
 - **Style preview** — Before committing to full generation, produce a single sample slide or section so the user can approve the visual direction. If they want changes, adjust the style or switch presets before generating the rest.
+- **Create custom style** — `/goose-graphics --create-style --ref <image>` runs only the style extraction workflow from `styles/extract-style.md`. Analyzes the reference image, maps fonts to Google Fonts equivalents, generates a slim-format style file, and saves it to `styles/<name>.md`. No format selection or HTML generation. The saved style is immediately available for future `/goose-graphics --style <name>` calls.
 
 ## 14. File Reference
 
@@ -257,6 +268,8 @@ Present the results to the user:
 ### Styles
 
 The canonical list of all 36 style presets lives in `styles/index.json` (slug, display name, mood group, one-line tagline). Individual slim style files at `styles/<slug>.md` give you the full spec (palette, typography, layout, do/don't, CSS snippets). Archived full-prose versions live in `styles/_full/<slug>.md` if you need the deeper atmospheric reference.
+
+Custom styles created via `--create-style` or the "I have a reference image" interactive option are saved to `styles/<name>.md` in the same slim format as presets. They are not added to `index.json` (which tracks only the 36 shipped presets) but are fully usable via `--style <name>`.
 
 ### Image Sources
 | File | Description |

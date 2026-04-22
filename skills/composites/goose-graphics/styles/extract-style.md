@@ -1,12 +1,12 @@
-# Skill: Extract Style from Reference Image
+# Skill: Create Custom Style from Reference Image
 
-Extract the visual design language from a reference image and produce a reusable DESIGN.md style definition file.
+Extract the visual design language from a reference image and produce a reusable slim-format style preset file — the same format used by all 36 built-in presets (e.g., `brutalist.md`, `matt-gray.md`).
 
 ---
 
 ## When to Use
 
-The user provides a reference image -- a screenshot, design mockup, mood board, website capture, or any visual reference -- and wants to capture its design language as a reusable style preset. The output is a complete 9-section DESIGN.md file that can be used by other graphic design skills to produce on-brand content.
+The user provides a reference image — a screenshot, design mockup, mood board, website capture, or any visual reference — and wants to capture its design language as a reusable style preset. The output is a slim-format `.md` style file (4-8KB) that is immediately usable via `--style <name>` in the goose-graphics workflow.
 
 ---
 
@@ -128,119 +128,202 @@ Construct the `<link>` tag with the selected fonts and the specific weights need
 
 ---
 
-## Phase 3: Generate the DESIGN.md
+## Phase 3: Generate the Slim Style File
 
-Produce a complete file with all 9 sections, following the exact structure and depth of the existing style presets (e.g., midnight-editorial.md). Every section must be substantive -- not placeholder text.
+Generate a style file in the **slim preset format** — the same structure used by all 36 built-in presets. Do NOT generate the verbose 9-section DESIGN.md format. If you need a structural reference, read `styles/brutalist.md` or `styles/matt-gray.md`.
 
-### Section 1: Visual Theme & Atmosphere
+The output should be **4-8KB** and contain these sections in order:
 
-Write a 2-3 paragraph narrative description of the extracted style. This is prose, not a list. Cover:
-- What tradition or design school this style draws from
-- How the color palette creates its specific mood
-- How the typography pairing works and why
-- What the accent color does for the composition
-- 2-3 real-world analogies (e.g., "the design language of a Scandinavian furniture catalog," "the feel of a fintech dashboard")
+### Section 1: Header
 
-End with a **Key Characteristics** bullet list (8-12 items) summarizing the most important rules, each with specific values (hex codes, pixel sizes, weights).
+```markdown
+# Style Name
 
-### Section 2: Color Palette & Roles
+2-4 sentence prose description of the style's visual identity. Describe the mood, the palette logic,
+the typography pairing, and what makes this style distinctive. Reference real-world analogies
+(e.g., "the feel of a Scandinavian furniture catalog," "fintech dashboard energy").
 
-Organize colors into these groups with the same structure as the reference:
+> Custom style — extracted from reference image
+```
 
-- **Primary** (3 colors): Background, primary text, primary accent -- with hex codes and usage descriptions.
-- **Accent** (2-3 colors): Secondary accent, hover states, tertiary tones.
-- **Neutral Scale** (4-6 colors): Surface variations from darkest to lightest (for dark themes) or lightest to darkest (for light themes). Include disabled text, placeholder, and metadata colors.
-- **Surface & Borders**: Surface primary, surface inset, border default (with alpha), border accent, border strong, divider rule.
-- **Shadow Colors**: 3-4 shadow definitions using RGBA values that stay on-palette.
+### Section 2: Palette
+
+A flat table with 6-12 rows. Every color gets a hex code and a role description. Include: background, primary text, accent, secondary accent (if present), card/surface colors, border colors, and any secondary text tones.
+
+```markdown
+## Palette
+
+| Hex | Role |
+|-----|------|
+| `#xxxxxx` | Background (primary canvas) |
+| `#xxxxxx` | Primary text |
+| `#xxxxxx` | Accent — emphasis, CTAs, highlights |
+| ... | ... |
+```
 
 **Color quality rules:**
-- Never use pure black (`#000000`) or pure white (`#ffffff`) unless the reference clearly does.
-- Text-on-background contrast must meet WCAG AA (4.5:1 ratio minimum). Mentally verify this.
-- Keep the total palette to 12-16 named colors. More than that creates inconsistency.
-- Shadow colors should use tinted RGBA from the accent color for warm palettes, or neutral RGBA for cool palettes.
+- Don't use pure black (`#000000`) or pure white (`#ffffff`) unless the reference clearly does.
+- Text-on-background contrast must meet WCAG AA (4.5:1 minimum). Mentally verify.
+- Keep total palette to 6-12 named colors.
 
-### Section 3: Typography Rules
+### Section 3: Typography
 
-Include:
-- **Font Families** block with the Google Fonts CDN link and CSS font-family declarations with full fallback stacks.
-- **Hierarchy table** with columns: Role | Font | Size | Weight | Line Height | Letter Spacing | Notes. Include at minimum: Display Hero, Section Heading, Sub-heading, Body Large, Body, Small/Caption, Big Numbers, Numbered Label, CTA Text.
-- **Principles** (5-6 bullet points) explaining the typographic logic: why these pairings, how tracking changes across sizes, when to use uppercase, line height rationale.
+Include the Google Fonts `<link>` tag (if using webfonts), Display and Body font-family declarations with fallback stacks, a hierarchy table with 8-9 rows, and 3-5 Principles bullets.
 
-### Section 4: Component Patterns
+```markdown
+## Typography
 
-Provide 6-8 HTML/CSS component snippets using CSS custom properties (`var(--color-*)`, `var(--font-*)`). Each should be a self-contained, inline-styled HTML block. Include at minimum:
-- Title Block (hero/header section)
-- Numbered Item
-- Stat Display
-- Comparison Grid (2-column)
-- List Item
-- Quote Block
-- CTA Block
+**Google Fonts**
 
-Adapt each component's structure to match the reference's design language. For example, if the reference is light and airy, components should have generous padding and minimal borders. If the reference is dense and technical, components should be compact with visible structure.
+\`\`\`html
+<link href="https://fonts.googleapis.com/css2?family=..." rel="stylesheet">
+\`\`\`
 
-### Section 5: Layout Principles
+- **Display:** `'Font Name', fallback, sans-serif`
+- **Body:** `'Font Name', fallback, sans-serif`
 
-Include:
-- **Spacing Scale** (8-10 values from micro to max) with pixel values and usage descriptions.
-- **Format Padding** table for 4 formats: Carousel (1080x1080), Infographic (1080xN), Slides (1920x1080), Poster (1080x1350).
-- **Alignment & Grid** rules: primary alignment, grid column guidance, rule/divider conventions, vertical rhythm, content gravity.
+| Role | Font | Size | Weight | Line-height | Tracking | Transform |
+|------|------|------|--------|-------------|----------|-----------|
+| Display Hero | ... | 72px | 700 | 1.10 | -1px | none |
+| Section Heading | ... | 48px | 700 | 1.15 | -0.5px | none |
+| Sub-heading | ... | 32px | 600 | 1.20 | 0 | none |
+| Body Large | ... | 22px | 500 | 1.55 | 0 | none |
+| Body | ... | 18px | 400 | 1.55 | 0 | none |
+| Caption | ... | 12-14px | 400 | 1.40 | ... | ... |
+| Big Number | ... | 64-100px | 800 | 1.00 | ... | none |
+| Label | ... | 14px | 500-600 | 1.00 | ... | ... |
+| CTA | ... | 16-18px | 700 | 1.00 | ... | ... |
 
-### Section 6: Depth & Elevation
+**Principles**
 
-Include:
-- **Elevation table** with 5 levels (Flat, Subtle, Card, Featured, Overlay) showing CSS shadow values and use cases.
-- **Border Treatments** (4 types): standard, active, accent rule, divider line -- with exact CSS values.
-- **Surface Hierarchy** explanation of how depth is communicated (lightness steps for dark themes, shadow intensity for light themes).
+- 3-5 bullets explaining the typographic logic (why these pairings, tracking behavior, uppercase rules, etc.)
+```
 
-### Section 7: Do's and Don'ts
+### Section 4: Layout
 
-Write 8-12 **Do** rules and 8-12 **Don't** rules. Each must be specific and actionable, referencing exact values (hex codes, pixel sizes, font names, weights). These should encode the guardrails that prevent someone from drifting off-style. Base them on what you observed in the reference -- if the reference never uses rounded corners, that is a Don't. If the reference uses a specific spacing rhythm, that is a Do.
+Bullet list covering format padding, border rules, radius, alignment, spacing, and any special layout elements (grids, textures, decorative patterns).
 
-### Section 8: Format Adaptation Notes
+```markdown
+## Layout
 
-For each of the 4 formats (Carousel, Infographic, Slides, Poster), provide:
-- Typography scale adjustments (which sizes change and to what values)
-- Padding values
-- Layout notes (single column vs. multi-column, content placement)
-- Format-specific conventions (e.g., swipe indicators for carousels, vertical rhythm for infographics)
+- Format padding: carousel Xpx · infographic X/X · slides Xpx · poster X/X.
+- Border rules (thickness, color, style).
+- Border-radius rules.
+- Alignment rules (left, center, mixed).
+- Card/container rules (bg, border, padding, radius).
+- Any special elements (dot grids, background patterns, decorative shapes).
+- Vertical rhythm and spacing between sections.
+```
 
-### Section 9: Agent Prompt Guide
+### Section 5: Do / Don't
 
-Include:
-- **Quick Color Reference** table: Name | Hex | Usage
-- **Font Declarations** as CSS code block
-- **Google Fonts Link** as HTML code block
-- **CSS Root Variables** -- a complete `:root` block defining every variable: colors (primary, accent, neutral, surfaces, borders, shadows), typography (families, sizes, weights, line heights), spacing, borders, and composed shadows.
-- **System Font Fallbacks**
+5-6 Do rules and 5-6 Don't rules. Each must be specific and actionable with exact values (hex codes, px sizes, font names, weights). These encode the guardrails that prevent drifting off-style.
+
+```markdown
+## Do / Don't
+
+**Do**
+
+- [Specific rule with exact values]
+- ...
+
+**Don't**
+
+- [Specific rule with exact values]
+- ...
+```
+
+### Section 6: CSS Snippets
+
+A `:root` variables block defining all CSS custom properties, followed by 4-5 self-contained component patterns as inline-styled HTML blocks. Each component must use the style's colors, fonts, and spacing directly (inline styles, not CSS variables in the HTML — the `:root` block is for reference).
+
+Required components:
+1. **Title block** — hero/header with headline, optional subtitle, optional label
+2. **Numbered item or step** — stat, step number, or numbered list element
+3. **Card** — bordered or surfaced container with content
+4. **CTA block** — call-to-action button
+5. **One style-specific component** — whatever is most distinctive about this style (quote block, stat display, tag system, grid pattern, etc.)
+
+```markdown
+## CSS snippets
+
+### `:root` variables
+
+\`\`\`css
+:root {
+  --color-bg: #...;
+  --color-text: #...;
+  --color-accent: #...;
+  /* all palette colors */
+
+  --font-display: '...', fallback;
+  --font-body: '...', fallback;
+
+  /* borders, radius, shadows, spacing as needed */
+}
+\`\`\`
+
+### Title block (brief description)
+
+\`\`\`html
+<div style="...">...</div>
+\`\`\`
+
+### Numbered item (brief description)
+
+\`\`\`html
+<div style="...">...</div>
+\`\`\`
+
+[...3 more components...]
+```
+
+**Important:** Study the component snippets in `brutalist.md` and `matt-gray.md` for the right level of detail. Each snippet should be a complete, copy-pasteable HTML block with all styles inline.
 
 ---
 
 ## Phase 4: Save & Confirm
 
-### Step 1 -- Ask for a name
+### Step 1 — Ask for a name
 
-Ask the user what they want to name this style. Suggest a descriptive name based on the mood and palette (e.g., "arctic-minimal", "warm-startup", "dark-technical", "sunset-editorial"). The name should be lowercase-kebab-case.
+Ask the user what they want to name this style. Suggest 2-3 descriptive names based on the mood and palette (e.g., "arctic-minimal", "warm-startup", "dark-technical", "sunset-editorial"). The name must be lowercase-kebab-case.
 
-### Step 2 -- Determine save location
+**Name collision guard:** Before saving, check whether `styles/<name>.md` already exists in the styles directory. If it does and is a shipped preset (listed in `styles/index.json`), warn the user and suggest an alternative name. Do not overwrite shipped presets.
 
-The default save path is the same directory as the other style presets. If you can detect the goose-graphics styles directory from context, use it. Otherwise, ask the user where to save.
+### Step 2 — Determine save location
 
-Default path pattern:
+Save the style file alongside the existing presets in the goose-graphics styles directory. Resolve the path relative to this skill file:
+
 ```
-[project-root]/goose-graphics/styles/[name].md
+[skill-pack-dir]/styles/<name>.md
 ```
 
-### Step 3 -- Save the file
+Where `[skill-pack-dir]` is the directory containing `SKILL.md` — the root of the goose-graphics skill pack. This is the same directory that contains `styles/brutalist.md`, `styles/matt-gray.md`, etc.
 
-Write the complete DESIGN.md file using the Write tool.
+**Host-specific paths (for reference):**
 
-### Step 4 -- Confirm
+| Host | Typical styles directory |
+|------|------------------------|
+| Claude Code / Desktop / Cowork | `~/.claude/skills/goose-graphics/styles/` |
+| Codex (OpenAI) | `~/.codex/skills/goose-graphics/styles/` |
+| Cursor | Styles embedded in `.cursor/rules/` (not applicable — Cursor uses a single `.mdc` file) |
+| Local dev / project install | `./skills/goose-graphics/styles/` or wherever the pack was cloned |
+
+In most cases, the skill is already running from the installed location, so saving to the `styles/` directory relative to this file is correct.
+
+### Step 3 — Save the file
+
+Write the complete style file using the Write tool.
+
+### Step 4 — Confirm
 
 Tell the user:
 - The file was saved and its full path
-- A 3-4 line summary of the extracted style: theme (dark/light), primary palette (background + text + accent), font pairing, and overall mood
-- That the style is now ready for use with other graphic design skills
+- A 3-4 line summary of the extracted style: theme (dark/light), primary palette (background + text + accent hex codes), font pairing, and overall mood
+- How to use it immediately:
+  ```
+  /goose-graphics --style <name> --format <format> --brief "..."
+  ```
 
 ---
 
@@ -262,4 +345,8 @@ The goal is **typographic equivalence**, not exact matching. A geometric sans is
 
 ### On Completeness
 
-Every section of the output DESIGN.md must be filled with substantive, specific content. Do not leave any section with placeholder text like "TBD" or "adjust as needed." The file should be immediately usable by another agent or skill without further editing.
+Every section of the output style file must be filled with substantive, specific content. Do not leave any section with placeholder text like "TBD" or "adjust as needed." The file should be immediately usable via `--style <name>` without further editing.
+
+### On Format
+
+The output MUST be in the slim preset format (Palette → Typography → Layout → Do/Don't → CSS snippets). Do NOT generate the verbose 9-section DESIGN.md format with sections like "Visual Theme & Atmosphere," "Depth & Elevation," or "Format Adaptation Notes." Those belong to the `_full/` archive versions. The slim format is what the generation pipeline reads.
