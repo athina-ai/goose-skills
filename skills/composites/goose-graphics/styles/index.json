@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 44,
+  "count": 46,
   "groups": [
     {
       "name": "Dark & Moody",
@@ -79,6 +79,13 @@
       "name": "Friendly Corporate",
       "styles": [
         { "slug": "mint-pixel-corporate", "name": "Mint Pixel Corporate", "tagline": "Pale mint + lime pixel-staircase corner decorations." }
+      ]
+    },
+    {
+      "name": "Halftone & Pixel",
+      "styles": [
+        { "slug": "halftone-electric", "name": "Halftone Electric", "tagline": "Electric blue brand canvas with white halftone dot fields and modular black/white cards." },
+        { "slug": "halftone-mono", "name": "Halftone Mono", "tagline": "Pure black-and-white halftone editorial — dot-matrix imagery in grayscale only." }
       ]
     }
   ]

@@ -393,6 +393,48 @@
       "png": "orbit-purple/tweet/example.png",
       "model": "sonnet",
       "status": "success"
+    },
+    "halftone-electric/poster": {
+      "generated_at": "2026-04-25T02:02:00.000Z",
+      "html": "halftone-electric/poster",
+      "png": "halftone-electric/poster/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "halftone-electric/carousel": {
+      "generated_at": "2026-04-25T02:02:00.000Z",
+      "html": "halftone-electric/carousel",
+      "png": "halftone-electric/carousel/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "halftone-electric/tweet": {
+      "generated_at": "2026-04-25T02:02:00.000Z",
+      "html": "halftone-electric/tweet",
+      "png": "halftone-electric/tweet/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "halftone-mono/poster": {
+      "generated_at": "2026-04-25T02:02:00.000Z",
+      "html": "halftone-mono/poster",
+      "png": "halftone-mono/poster/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "halftone-mono/carousel": {
+      "generated_at": "2026-04-25T02:02:00.000Z",
+      "html": "halftone-mono/carousel",
+      "png": "halftone-mono/carousel/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "halftone-mono/tweet": {
+      "generated_at": "2026-04-25T02:02:00.000Z",
+      "html": "halftone-mono/tweet",
+      "png": "halftone-mono/tweet/example.png",
+      "model": "opus",
+      "status": "success"
     }
   }
 }
