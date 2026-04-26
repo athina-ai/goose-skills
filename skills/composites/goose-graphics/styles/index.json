@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 44,
+  "count": 42,
   "groups": [
     {
       "name": "Dark & Moody",
@@ -11,7 +11,6 @@
         { "slug": "terminal", "name": "Terminal", "tagline": "Green-on-dark monospace hacker aesthetic." },
         { "slug": "bw-editorial-drop", "name": "BW Editorial Drop", "tagline": "Grayscale photo top + yellow Anton display on black drop panel." },
         { "slug": "masked-object-editorial", "name": "Masked Object Editorial", "tagline": "Navy + photo clipped into an object silhouette + italic Playfair." },
-        { "slug": "grid-quote-editorial", "name": "Grid Quote Editorial", "tagline": "Royal purple widescreen quote card + pink grid overlay + mint Figtree." },
         { "slug": "dot-grid-stat", "name": "Dot Grid Stat", "tagline": "Dark charcoal + oversized white stats + teal dot grids as visual meters." }
       ]
     },
@@ -35,7 +34,6 @@
       "styles": [
         { "slug": "warm-earth", "name": "Warm Earth", "tagline": "Organic terracotta and sage on cream." },
         { "slug": "garden-blur", "name": "Garden Blur", "tagline": "Soft botanical backgrounds with translucent card overlays." },
-        { "slug": "soft-cloud", "name": "Soft Cloud", "tagline": "Airy pastel gradients with white cards." },
         { "slug": "peach-pop", "name": "Peach Pop", "tagline": "DTC beauty: monospace testimonials on peach + blue blocks." },
         { "slug": "pastel-organic-shapes", "name": "Pastel Organic Shapes", "tagline": "Cream canvas with one pistachio circle half off-frame." },
         { "slug": "aurora-app-launch", "name": "Aurora App Launch", "tagline": "Rainbow mesh gradient + phone mockup + frosted-glass footer." }

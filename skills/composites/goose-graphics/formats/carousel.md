@@ -87,7 +87,7 @@ If the user has content, ask them to share it before proceeding.
 
 ## 4. Style Selection Phase
 
-Present the 10 available design presets:
+Present the 9 available design presets:
 
 | # | Preset | Description |
 |---|--------|-------------|
@@ -95,19 +95,18 @@ Present the 10 available design presets:
 | 2 | **Clean Slate** | Ultra-minimal, precise, modern tech aesthetic |
 | 3 | **Warm Earth** | Organic, artisanal, grounded with natural tones |
 | 4 | **Electric Burst** | Bold, energetic, attention-grabbing with vivid color |
-| 5 | **Soft Cloud** | Airy, modern, approachable with gentle pastels |
-| 6 | **Terminal** | Dev/hacker aesthetic, focused and technical |
-| 7 | **Paper & Ink** | Classic editorial, literary, print-inspired |
-| 8 | **Brutalist** | Raw, structural, anti-design with strong geometry |
-| 9 | **Golden Dusk** | Warm, luxurious, premium with rich gold tones |
-| 10 | **Deep Ocean** | Calm, professional, immersive blue-dark palette |
+| 5 | **Terminal** | Dev/hacker aesthetic, focused and technical |
+| 6 | **Paper & Ink** | Classic editorial, literary, print-inspired |
+| 7 | **Brutalist** | Raw, structural, anti-design with strong geometry |
+| 8 | **Golden Dusk** | Warm, luxurious, premium with rich gold tones |
+| 9 | **Deep Ocean** | Calm, professional, immersive blue-dark palette |
 
 **Additional options:**
 
 - **"I have a reference image"** -- Use the `extract-style` skill at `styles/extract-style.md` to derive a custom palette from the user's image.
 - **Guided discovery** -- If the user is unsure, ask about their audience and tone, then recommend 2-3 presets:
   - Professional / Corporate --> Midnight Editorial, Clean Slate, Deep Ocean
-  - Creative / Playful --> Electric Burst, Soft Cloud, Warm Earth
+  - Creative / Playful --> Electric Burst, Warm Earth
   - Technical / Dev-focused --> Terminal, Brutalist, Clean Slate
   - Elegant / Premium --> Midnight Editorial, Golden Dusk, Paper & Ink
 

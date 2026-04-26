@@ -1,8 +1,8 @@
 # DESIGN.md Compliance Coverage
 
-Generated audit of all 36 `styles/_full/<slug>.md` files against the VoltAgent / Claude Design 9-section DESIGN.md spec.
+Generated audit of all 34 `styles/_full/<slug>.md` files against the VoltAgent / Claude Design 9-section DESIGN.md spec.
 
-**Result: 36/36 files fully compliant.**
+**Result: 34/34 files fully compliant.**
 
 
 ## Required sections
@@ -43,7 +43,6 @@ Sections are detected by case-insensitive substring match on `##` headings. Clos
 | frosted-lens | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | garden-blur | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | golden-dusk | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| grid-quote-editorial | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | heatwave-orange | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | highlighter-yellow | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | ink-doodle-event | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
@@ -59,7 +58,6 @@ Sections are detected by case-insensitive substring match on `##` headings. Clos
 | product-minimal | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | retro-line-art | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | social-post-card | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| soft-cloud | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | split-yellow-product | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | sunburst-editorial | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | terminal | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
@@ -71,18 +69,18 @@ Sections are detected by case-insensitive substring match on `##` headings. Clos
 
 | Section | Coverage |
 |---|---|
-| Visual Theme & Atmosphere | 36/36 |
-| Color Palette & Roles | 36/36 |
-| Typography Rules | 36/36 |
-| Component Stylings | 36/36 |
-| Layout Principles | 36/36 |
-| Depth & Elevation | 36/36 |
-| Do's and Don'ts | 36/36 |
-| Responsive Behavior | 36/36 |
-| Agent Prompt Guide | 36/36 |
+| Visual Theme & Atmosphere | 34/34 |
+| Color Palette & Roles | 34/34 |
+| Typography Rules | 34/34 |
+| Component Stylings | 34/34 |
+| Layout Principles | 34/34 |
+| Depth & Elevation | 34/34 |
+| Do's and Don'ts | 34/34 |
+| Responsive Behavior | 34/34 |
+| Agent Prompt Guide | 34/34 |
 
 ## Notes
 
-- Pre-existing structure: every file already shipped with §1–§7 and an Agent Prompt Guide section. The VoltAgent Responsive Behavior section was uniformly missing across all 36 files.
+- Pre-existing structure: every file already shipped with §1–§7 and an Agent Prompt Guide section. The VoltAgent Responsive Behavior section was uniformly missing across all 34 files.
 - Gap fill: a compact §8 Responsive Behavior was inserted in each file covering format-driven responsive principles (type ramps by frame size, padding scales, safe zones on Story, one-idea-per-frame, signature-component invariance, aspect-ratio aware composition, PNG raster export). Subsequent sections (Format Adaptation Notes, Agent Prompt Guide) were renumbered to §9 and §10.
 - No existing content was modified or removed.

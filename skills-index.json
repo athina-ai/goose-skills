@@ -1,6 +1,6 @@
 {
   "version": "1.2.0",
-  "generated": "2026-04-24",
+  "generated": "2026-04-25",
   "skills": [
     {
       "slug": "ad-angle-miner",
@@ -1497,7 +1497,6 @@
         "skills/composites/goose-graphics/styles/_full/frosted-lens.md",
         "skills/composites/goose-graphics/styles/_full/garden-blur.md",
         "skills/composites/goose-graphics/styles/_full/golden-dusk.md",
-        "skills/composites/goose-graphics/styles/_full/grid-quote-editorial.md",
         "skills/composites/goose-graphics/styles/_full/heatwave-orange.md",
         "skills/composites/goose-graphics/styles/_full/highlighter-yellow.md",
         "skills/composites/goose-graphics/styles/_full/ink-doodle-event.md",
@@ -1513,7 +1512,6 @@
         "skills/composites/goose-graphics/styles/_full/product-minimal.md",
         "skills/composites/goose-graphics/styles/_full/retro-line-art.md",
         "skills/composites/goose-graphics/styles/_full/social-post-card.md",
-        "skills/composites/goose-graphics/styles/_full/soft-cloud.md",
         "skills/composites/goose-graphics/styles/_full/split-yellow-product.md",
         "skills/composites/goose-graphics/styles/_full/sunburst-editorial.md",
         "skills/composites/goose-graphics/styles/_full/terminal.md",
@@ -1538,7 +1536,6 @@
         "skills/composites/goose-graphics/styles/frosted-lens.md",
         "skills/composites/goose-graphics/styles/garden-blur.md",
         "skills/composites/goose-graphics/styles/golden-dusk.md",
-        "skills/composites/goose-graphics/styles/grid-quote-editorial.md",
         "skills/composites/goose-graphics/styles/heatwave-orange.md",
         "skills/composites/goose-graphics/styles/highlighter-yellow.md",
         "skills/composites/goose-graphics/styles/index.json",
@@ -1559,7 +1556,6 @@
         "skills/composites/goose-graphics/styles/retro-line-art.md",
         "skills/composites/goose-graphics/styles/sage-split-editorial.md",
         "skills/composites/goose-graphics/styles/social-post-card.md",
-        "skills/composites/goose-graphics/styles/soft-cloud.md",
         "skills/composites/goose-graphics/styles/split-yellow-product.md",
         "skills/composites/goose-graphics/styles/sunburst-editorial.md",
         "skills/composites/goose-graphics/styles/terminal.md",
