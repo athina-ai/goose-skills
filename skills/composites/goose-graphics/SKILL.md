@@ -132,7 +132,7 @@ Then follow that format skill's **Content Discovery** phase to gather the topic,
 
 ## 7. Step 2: Select Style
 
-Present the **36 style presets**, grouped by mood. The canonical list lives in `styles/index.json` — when in doubt, read that file.
+Present the **34 style presets**, grouped by mood. The canonical list lives in `styles/index.json` — when in doubt, read that file.
 
 **Dark & Moody**
 1. **Midnight Editorial** — Dark, elegant magazine aesthetic with copper accents.
@@ -141,48 +141,46 @@ Present the **36 style presets**, grouped by mood. The canonical list lives in `
 4. **Terminal** — Green-on-dark monospace hacker aesthetic.
 5. **BW Editorial Drop** — Grayscale photo top + yellow Anton display on black drop panel.
 6. **Masked Object Editorial** — Navy + photo clipped into an object silhouette + italic Playfair.
-7. **Grid Quote Editorial** — Royal purple widescreen quote card with pink grid overlay + mint Figtree.
 
 **Light & Editorial**
-8. **Clean Slate** — Ultra-minimal white canvas, single blue accent.
-9. **Paper & Ink** — Classic serif editorial with red accent on cream.
-10. **Matt Gray** — Playfair italic green + yellow pill tags on light gray.
-11. **Magazine Red** — Massive tomato-red condensed headlines on cream paper.
-12. **Sunburst Editorial** — Mid-century book cover feel with serif + collage accents.
-13. **Product Minimal** — Apple-style white canvas, hero product photo, underlined URL.
-14. **Archive Fashion** — Stone beige catalog frame + brown photo inset + pink sticker.
+7. **Clean Slate** — Ultra-minimal white canvas, single blue accent.
+8. **Paper & Ink** — Classic serif editorial with red accent on cream.
+9. **Matt Gray** — Playfair italic green + yellow pill tags on light gray.
+10. **Magazine Red** — Massive tomato-red condensed headlines on cream paper.
+11. **Sunburst Editorial** — Mid-century book cover feel with serif + collage accents.
+12. **Product Minimal** — Apple-style white canvas, hero product photo, underlined URL.
+13. **Archive Fashion** — Stone beige catalog frame + brown photo inset + pink sticker.
 
 **Organic & Warm**
-15. **Warm Earth** — Organic terracotta and sage on cream.
-16. **Garden Blur** — Soft botanical backgrounds with translucent card overlays.
-17. **Soft Cloud** — Airy pastel gradients with white cards.
-18. **Peach Pop** — DTC beauty: monospace testimonials on peach + blue blocks.
-19. **Pastel Organic Shapes** — Cream canvas with one pistachio circle half off-frame.
-20. **Aurora App Launch** — Rainbow mesh gradient + phone mockup + frosted-glass footer.
+14. **Warm Earth** — Organic terracotta and sage on cream.
+15. **Garden Blur** — Soft botanical backgrounds with translucent card overlays.
+16. **Peach Pop** — DTC beauty: monospace testimonials on peach + blue blocks.
+17. **Pastel Organic Shapes** — Cream canvas with one pistachio circle half off-frame.
+18. **Aurora App Launch** — Rainbow mesh gradient + phone mockup + frosted-glass footer.
 
 **Bold & Energetic**
-21. **Electric Burst** — Bold neon yellow and hot pink on black.
-22. **Highlighter Yellow** — Saturated yellow + heavy black sans + white-rect italic emphasis.
-23. **Heatwave Orange** — Three-variant white/orange/black system + line-wave accents.
-24. **Split Yellow Product** — Vivid mustard 2/3 headline slab + gray body panel + yellow photo.
-25. **Blueprint Sticky** — Cobalt blueprint grid + tilted pink/yellow sticky notes.
+19. **Electric Burst** — Bold neon yellow and hot pink on black.
+20. **Highlighter Yellow** — Saturated yellow + heavy black sans + white-rect italic emphasis.
+21. **Heatwave Orange** — Three-variant white/orange/black system + line-wave accents.
+22. **Split Yellow Product** — Vivid mustard 2/3 headline slab + gray body panel + yellow photo.
+23. **Blueprint Sticky** — Cobalt blueprint grid + tilted pink/yellow sticky notes.
 
 **Retro & Cinematic**
-26. **Cinematic Romance** — Portrait photo canvas + hot pink chancery script headlines.
-27. **Vintage Duotone Poster** — Forest green + dusty pink halftone, 1950s letterpress.
-28. **Retro Line Art** — Powder blue + cream hand-drawn cocktail-poster line art.
-29. **Iridescent Y2K** — Brutalist grid + chrome iridescent blob hero, Y2K club poster.
-30. **Ink Doodle Event** — Kraft paper + loose hand-drawn ink character + Yellowtail script.
+24. **Cinematic Romance** — Portrait photo canvas + hot pink chancery script headlines.
+25. **Vintage Duotone Poster** — Forest green + dusty pink halftone, 1950s letterpress.
+26. **Retro Line Art** — Powder blue + cream hand-drawn cocktail-poster line art.
+27. **Iridescent Y2K** — Brutalist grid + chrome iridescent blob hero, Y2K club poster.
+28. **Ink Doodle Event** — Kraft paper + loose hand-drawn ink character + Yellowtail script.
 
 **Structural & Technical**
-31. **Brutalist** — Raw heavy borders, system fonts, no decoration.
-32. **Frosted Lens** — Glassmorphism + blurred photography backgrounds.
-33. **Card Toss** — Scattered tilted cards with sticky-note energy.
-34. **Venn Infographic** — Translucent three-circle Venn diagrams + floating info cards.
-35. **Social Post Card** — Blurred real scene + simulated Instagram post card as hero.
+29. **Brutalist** — Raw heavy borders, system fonts, no decoration.
+30. **Frosted Lens** — Glassmorphism + blurred photography backgrounds.
+31. **Card Toss** — Scattered tilted cards with sticky-note energy.
+32. **Venn Infographic** — Translucent three-circle Venn diagrams + floating info cards.
+33. **Social Post Card** — Blurred real scene + simulated Instagram post card as hero.
 
 **Friendly Corporate**
-36. **Mint Pixel Corporate** — Pale mint + lime pixel-staircase corner decorations.
+34. **Mint Pixel Corporate** — Pale mint + lime pixel-staircase corner decorations.
 
 The user may also say: **"I have a reference image"** — in that case, read `styles/extract-style.md` and follow its workflow to derive a custom style in slim format from the provided image. The extracted style is saved to `styles/<name>.md` alongside the presets and is immediately usable. After the style is saved, continue the workflow from Step 3 onward using the newly created style.
 

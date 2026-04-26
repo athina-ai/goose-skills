@@ -56,15 +56,15 @@ goose-graphics/
 | Chart | 1080x1080px | Single PNG |
 | Tweet | 1080x1080px | Single PNG |
 
-## Style Presets (36 total)
+## Style Presets (34 total)
 
 The single source of truth is `styles/index.json`. The README, SKILL.md, and any consuming tool should read from that file. Presets are grouped into 7 moods:
 
 | Group | Count | Slugs |
 |-------|-------|-------|
-| Dark & Moody | 7 | `midnight-editorial`, `deep-ocean`, `golden-dusk`, `terminal`, `bw-editorial-drop`, `masked-object-editorial`, `grid-quote-editorial` |
+| Dark & Moody | 6 | `midnight-editorial`, `deep-ocean`, `golden-dusk`, `terminal`, `bw-editorial-drop`, `masked-object-editorial` |
 | Light & Editorial | 7 | `clean-slate`, `paper-and-ink`, `matt-gray`, `magazine-red`, `sunburst-editorial`, `product-minimal`, `archive-fashion` |
-| Organic & Warm | 6 | `warm-earth`, `garden-blur`, `soft-cloud`, `peach-pop`, `pastel-organic-shapes`, `aurora-app-launch` |
+| Organic & Warm | 5 | `warm-earth`, `garden-blur`, `peach-pop`, `pastel-organic-shapes`, `aurora-app-launch` |
 | Bold & Energetic | 5 | `electric-burst`, `highlighter-yellow`, `heatwave-orange`, `split-yellow-product`, `blueprint-sticky` |
 | Retro & Cinematic | 5 | `cinematic-romance`, `vintage-duotone-poster`, `retro-line-art`, `iridescent-y2k`, `ink-doodle-event` |
 | Structural & Technical | 5 | `brutalist`, `frosted-lens`, `card-toss`, `venn-infographic`, `social-post-card` |
