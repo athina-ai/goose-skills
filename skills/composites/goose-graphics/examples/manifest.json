@@ -394,6 +394,153 @@
       "model": "sonnet",
       "status": "success"
     },
+    "pillow-block/poster": {
+      "generated_at": "2026-04-25T12:00:00.000Z",
+      "html": "pillow-block/poster",
+      "png": "pillow-block/poster/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "pillow-block/infographic": {
+      "generated_at": "2026-04-25T12:00:00.000Z",
+      "html": "pillow-block/infographic",
+      "png": "pillow-block/infographic/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "pillow-block/tweet": {
+      "generated_at": "2026-04-25T12:00:00.000Z",
+      "html": "pillow-block/tweet",
+      "png": "pillow-block/tweet/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "blush-annual/poster": {
+      "generated_at": "2026-04-25T12:00:00.000Z",
+      "html": "blush-annual/poster",
+      "png": "blush-annual/poster/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "blush-annual/infographic": {
+      "generated_at": "2026-04-25T12:00:00.000Z",
+      "html": "blush-annual/infographic",
+      "png": "blush-annual/infographic/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "blush-annual/tweet": {
+      "generated_at": "2026-04-25T12:00:00.000Z",
+      "html": "blush-annual/tweet",
+      "png": "blush-annual/tweet/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "neon-dashboard/poster": {
+      "generated_at": "2026-04-25T12:00:00.000Z",
+      "html": "neon-dashboard/poster",
+      "png": "neon-dashboard/poster/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "neon-dashboard/chart": {
+      "generated_at": "2026-04-25T12:00:00.000Z",
+      "html": "neon-dashboard/chart",
+      "png": "neon-dashboard/chart/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "neon-dashboard/infographic": {
+      "generated_at": "2026-04-25T12:00:00.000Z",
+      "html": "neon-dashboard/infographic",
+      "png": "neon-dashboard/infographic/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "pillow-block/chart": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "pillow-block/chart",
+      "png": "pillow-block/chart/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "pillow-block/carousel": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "pillow-block/carousel",
+      "png": "pillow-block/carousel/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "pillow-block/slides": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "pillow-block/slides",
+      "png": "pillow-block/slides/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "pillow-block/story": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "pillow-block/story",
+      "png": "pillow-block/story/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "blush-annual/chart": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "blush-annual/chart",
+      "png": "blush-annual/chart/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "blush-annual/carousel": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "blush-annual/carousel",
+      "png": "blush-annual/carousel/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "blush-annual/slides": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "blush-annual/slides",
+      "png": "blush-annual/slides/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "blush-annual/story": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "blush-annual/story",
+      "png": "blush-annual/story/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "neon-dashboard/tweet": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "neon-dashboard/tweet",
+      "png": "neon-dashboard/tweet/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "neon-dashboard/carousel": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "neon-dashboard/carousel",
+      "png": "neon-dashboard/carousel/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "neon-dashboard/slides": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "neon-dashboard/slides",
+      "png": "neon-dashboard/slides/example.png",
+      "model": "opus",
+      "status": "success"
+    },
+    "neon-dashboard/story": {
+      "generated_at": "2026-04-25T13:00:00.000Z",
+      "html": "neon-dashboard/story",
+      "png": "neon-dashboard/story/example.png",
+      "model": "opus",
+      "status": "success"
+    },
     "halftone-electric/poster": {
       "generated_at": "2026-04-25T02:02:00.000Z",
       "html": "halftone-electric/poster",

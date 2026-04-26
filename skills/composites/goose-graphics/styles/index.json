@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 52,
+  "count": 55,
   "groups": [
     {
       "name": "Dark & Moody",
@@ -12,6 +12,7 @@
         { "slug": "bw-editorial-drop", "name": "BW Editorial Drop", "tagline": "Grayscale photo top + yellow Anton display on black drop panel." },
         { "slug": "masked-object-editorial", "name": "Masked Object Editorial", "tagline": "Navy + photo clipped into an object silhouette + italic Playfair." },
         { "slug": "dot-grid-stat", "name": "Dot Grid Stat", "tagline": "Dark charcoal + oversized white stats + teal dot grids as visual meters." },
+        { "slug": "neon-dashboard", "name": "Neon Dashboard", "tagline": "Dark jewel surfaces + neon pink/yellow accents + pill labels + mini charts." },
         { "slug": "forest-data-report", "name": "Forest Data Report", "tagline": "Deep forest green + bright lime stat numerals + arrow-bullet data rows." }
       ]
     },
@@ -28,6 +29,7 @@
         { "slug": "minimal-film-poster", "name": "Minimal Film Poster", "tagline": "Ultra-minimal off-white + massive serif title + tiny color accent bar." },
         { "slug": "dot-matrix-colors", "name": "Dot Matrix Colors", "tagline": "White canvas + multi-color dot grids (purple, blue, orange) + stat numbers." },
         { "slug": "sage-split-editorial", "name": "Sage Split Editorial", "tagline": "Sage green + serif text left + abstract generative art on black right." },
+        { "slug": "blush-annual", "name": "Blush Annual", "tagline": "Blush pink canvas + pastel tiles + oversized black serif money/percent stats." },
         { "slug": "lime-gallery", "name": "Lime Gallery", "tagline": "Lime-yellow gallery poster with italic serif title + halftone landscape band." }
       ]
     },
@@ -84,7 +86,8 @@
     {
       "name": "Friendly Corporate",
       "styles": [
-        { "slug": "mint-pixel-corporate", "name": "Mint Pixel Corporate", "tagline": "Pale mint + lime pixel-staircase corner decorations." }
+        { "slug": "mint-pixel-corporate", "name": "Mint Pixel Corporate", "tagline": "Pale mint + lime pixel-staircase corner decorations." },
+        { "slug": "pillow-block", "name": "Pillow Block", "tagline": "Pillowy rounded squircle tiles in candy-corporate palette (orange, pink, lime, pine, black)." }
       ]
     },
     {
