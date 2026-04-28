@@ -190,6 +190,7 @@ const packs = scanPacks(registrySkills).sort((a, b) => a.slug.localeCompare(b.sl
 // exist top-level via scanCategory and pack.skills[] just references them.
 const promotedFromPacks = [];
 const registrySlugs = new Set(registrySkills.map((s) => s.slug));
+const promotedSlugs = new Map(); // slug -> originating pack slug
 for (const pack of packs) {
   for (const sub of pack.skills) {
     if (sub.source !== 'pack') continue;
@@ -199,6 +200,16 @@ for (const pack of packs) {
         `Pack "${pack.slug}": sub-skill slug "${sub.slug}" collides with a top-level registry skill`,
       );
     }
+
+    const existingPack = promotedSlugs.get(sub.slug);
+    if (existingPack) {
+      throw new Error(
+        `Pack-only sub-skill slug "${sub.slug}" appears in multiple packs ` +
+          `("${existingPack}" and "${pack.slug}"). ` +
+          `Sub-skill slugs must be globally unique — downstream consumers upsert by slug.`,
+      );
+    }
+    promotedSlugs.set(sub.slug, pack.slug);
 
     promotedFromPacks.push({
       slug: sub.slug,

@@ -152,6 +152,38 @@ test('throws when a pack-only sub-skill slug collides with a top-level skill', (
   fs.rmSync(root, { recursive: true, force: true });
 });
 
+test('throws when the same pack-only sub-skill slug appears in two packs', () => {
+  const root = makeFixtureRoot();
+  writePack(root, 'pack-a', {
+    slug: 'pack-a',
+    name: 'Pack A',
+    tags: ['lead-generation'],
+    skills: ['shared-sub'],
+  });
+  writePackSubSkill(root, 'pack-a', 'shared-sub', {
+    name: 'shared-sub',
+    description: 'From pack A.',
+  });
+  writePack(root, 'pack-b', {
+    slug: 'pack-b',
+    name: 'Pack B',
+    tags: ['lead-generation'],
+    skills: ['shared-sub'],
+  });
+  writePackSubSkill(root, 'pack-b', 'shared-sub', {
+    name: 'shared-sub',
+    description: 'From pack B.',
+  });
+
+  assert.throws(
+    () => runBuild(root),
+    /appears in multiple packs/,
+    'must throw when the same pack-only slug exists in two packs (downstream upsert by slug would silently overwrite)',
+  );
+
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
 test('handles tree with no packs', () => {
   const root = makeFixtureRoot();
   writeSkill(

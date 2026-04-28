@@ -3,7 +3,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+// ROOT defaults to the repo root, but tests can override via env var
+// (matches the same convention used by build-index.js).
+const ROOT = process.env.GOOSE_SKILLS_ROOT
+  ? path.resolve(process.env.GOOSE_SKILLS_ROOT)
+  : path.resolve(__dirname, '..');
 const CATEGORIES = ['capabilities', 'composites', 'playbooks'];
 const SCHEMA_PATH = path.join(ROOT, 'schemas', 'skill-meta.schema.json');
 
@@ -117,20 +121,21 @@ if (fs.existsSync(indexPath)) {
   }
 
   if (index) {
-    const indexed = new Set();
+    // STRICT: every SKILL.md on disk must appear in the TOP-LEVEL skills[].
+    // Nested presence in packs[].skills[] does NOT satisfy this — that's the
+    // exact regression the validator must catch. Downstream consumers (the
+    // backend sync and the Payload CMS push) iterate idx.skills[] only.
+    const topLevelPaths = new Set();
     for (const s of index.skills || []) {
-      if (s.path) indexed.add(s.path);
-    }
-    for (const p of index.packs || []) {
-      for (const s of p.skills || []) {
-        if (s.path) indexed.add(s.path);
-      }
+      if (s.path) topLevelPaths.add(s.path);
     }
 
-    const missing = allSkillMdDirs.filter((d) => !indexed.has(d));
+    const missing = allSkillMdDirs.filter((d) => !topLevelPaths.has(d));
     if (missing.length) {
       errors.push(
-        `${missing.length} SKILL.md file(s) on disk are not represented in skills-index.json. ` +
+        `${missing.length} SKILL.md file(s) are missing from top-level idx.skills[]. ` +
+          `Pack sub-skills must be promoted to top-level — nested presence in ` +
+          `packs[].skills[] is invisible to the backend DB sync and Payload CMS push. ` +
           `Run \`npm run build:index\` to regenerate. Missing:\n  ${missing.join('\n  ')}`,
       );
     }
