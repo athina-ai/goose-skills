@@ -283,6 +283,34 @@
       }
     },
     {
+      "slug": "beat-sync-reel",
+      "name": "beat-sync-reel",
+      "category": "capabilities",
+      "description": "Generates Instagram Reels where product image cuts are synced to audio beats. Accepts audio as a local file, URL, or search query. Uses librosa for beat detection, FFmpeg Ken Burns for scene animation, and Pillow for text overlays. No AI video generation — fully free, fast, and scalable.",
+      "tags": "content",
+      "path": "skills/packs/video-production/beat-sync-reel",
+      "files": [
+        "skills/packs/video-production/beat-sync-reel/SKILL.md",
+        "skills/packs/video-production/beat-sync-reel/skill.meta.json"
+      ],
+      "metadata": {
+        "slug": "beat-sync-reel",
+        "category": "capabilities",
+        "pack": "video-production",
+        "tags": [
+          "content"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install video-production",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
       "slug": "blog-feed-monitor",
       "name": "blog-feed-monitor",
       "category": "capabilities",
@@ -554,6 +582,36 @@
         ],
         "installation": {
           "base_command": "npx goose-skills install cold-email-outreach",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
+      "slug": "community-signals",
+      "name": "community-signals",
+      "category": "capabilities",
+      "description": "Extract leads from developer forums (Hacker News, Reddit) by detecting intent signals — alternative seeking, competitor pain, scaling challenges, DIY solutions, and migration intent. Scores users by intent strength and cross-platform presence.",
+      "tags": "lead-generation, research, competitive-intel",
+      "path": "skills/packs/lead-gen-devtools/community-signals",
+      "files": [
+        "skills/packs/lead-gen-devtools/community-signals/SKILL.md",
+        "skills/packs/lead-gen-devtools/community-signals/scripts/community_signals.py"
+      ],
+      "metadata": {
+        "slug": "community-signals",
+        "category": "capabilities",
+        "pack": "lead-gen-devtools",
+        "tags": [
+          "lead-generation",
+          "research",
+          "competitive-intel"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install lead-gen-devtools",
           "supports": [
             "claude",
             "cursor",
@@ -856,6 +914,36 @@
         "source": "orthogonal",
         "installation": {
           "base_command": "npx goose-skills install competitor-research",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
+      "slug": "competitor-signals",
+      "name": "competitor-signals",
+      "category": "capabilities",
+      "description": "Extract leads from competitor product activity — Product Hunt commenters/upvoters, HN posts about competitors, case studies, testimonials, tech press, and switching signals. Detects people actively switching from competitors as highest-priority leads.",
+      "tags": "lead-generation, research, competitive-intel",
+      "path": "skills/packs/lead-gen-devtools/competitor-signals",
+      "files": [
+        "skills/packs/lead-gen-devtools/competitor-signals/SKILL.md",
+        "skills/packs/lead-gen-devtools/competitor-signals/scripts/competitor_signals.py"
+      ],
+      "metadata": {
+        "slug": "competitor-signals",
+        "category": "capabilities",
+        "pack": "lead-gen-devtools",
+        "tags": [
+          "lead-generation",
+          "research",
+          "competitive-intel"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install lead-gen-devtools",
           "supports": [
             "claude",
             "cursor",
@@ -1300,6 +1388,35 @@
       }
     },
     {
+      "slug": "demo-builder",
+      "name": "demo-builder",
+      "category": "capabilities",
+      "description": "Builds personalized demo assets for top prospects using the founder's product API/MCP/SDK. Researches prospect, proposes demo concepts, builds working prototype, tests it, and generates comparison report with live demo link.",
+      "tags": "lead-generation, research, competitive-intel",
+      "path": "skills/packs/lead-gen-devtools/demo-builder",
+      "files": [
+        "skills/packs/lead-gen-devtools/demo-builder/SKILL.md"
+      ],
+      "metadata": {
+        "slug": "demo-builder",
+        "category": "capabilities",
+        "pack": "lead-gen-devtools",
+        "tags": [
+          "lead-generation",
+          "research",
+          "competitive-intel"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install lead-gen-devtools",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
       "slug": "disqualification-handling",
       "name": "disqualification-handling",
       "category": "composites",
@@ -1506,6 +1623,36 @@
         ],
         "installation": {
           "base_command": "npx goose-skills install event-prospecting-pipeline",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
+      "slug": "event-signals",
+      "name": "event-signals",
+      "category": "capabilities",
+      "description": "Extract leads from conferences, meetups, hackathons, and podcasts by analyzing speaker lists, sponsor lists, hackathon entries, and podcast guests. Discovers events via Sessionize, Confs.tech, Meetup, Luma, ListenNotes, and Devpost. Looks back 90 days and forward 180 days.",
+      "tags": "lead-generation, research, competitive-intel",
+      "path": "skills/packs/lead-gen-devtools/event-signals",
+      "files": [
+        "skills/packs/lead-gen-devtools/event-signals/SKILL.md",
+        "skills/packs/lead-gen-devtools/event-signals/scripts/event_signals.py"
+      ],
+      "metadata": {
+        "slug": "event-signals",
+        "category": "capabilities",
+        "pack": "lead-gen-devtools",
+        "tags": [
+          "lead-generation",
+          "research",
+          "competitive-intel"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install lead-gen-devtools",
           "supports": [
             "claude",
             "cursor",
@@ -1826,6 +1973,42 @@
           "lead-qualification",
           "luma-event-attendees"
         ]
+      }
+    },
+    {
+      "slug": "github-repo-signals",
+      "name": "github-repo-signals",
+      "category": "capabilities",
+      "description": "Extract and score leads from GitHub repositories by analyzing stars, forks, issues, PRs, comments, and contributions. Produces unified multi-repo CSV with deduplicated user profiles. No paid API credits required.",
+      "tags": "lead-generation, research, competitive-intel",
+      "path": "skills/packs/lead-gen-devtools/github-repo-signals",
+      "files": [
+        "skills/packs/lead-gen-devtools/github-repo-signals/SKILL.md",
+        "skills/packs/lead-gen-devtools/github-repo-signals/scripts/__init__.py",
+        "skills/packs/lead-gen-devtools/github-repo-signals/scripts/gh_common.py",
+        "skills/packs/lead-gen-devtools/github-repo-signals/scripts/gh_contributors.py",
+        "skills/packs/lead-gen-devtools/github-repo-signals/scripts/gh_issues_scanner.py",
+        "skills/packs/lead-gen-devtools/github-repo-signals/scripts/gh_repo_signals.py",
+        "skills/packs/lead-gen-devtools/github-repo-signals/scripts/gh_stars_forks.py",
+        "skills/packs/lead-gen-devtools/github-repo-signals/scripts/gh_techstack.py"
+      ],
+      "metadata": {
+        "slug": "github-repo-signals",
+        "category": "capabilities",
+        "pack": "lead-gen-devtools",
+        "tags": [
+          "lead-generation",
+          "research",
+          "competitive-intel"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install lead-gen-devtools",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
       }
     },
     {
@@ -3270,6 +3453,35 @@
       }
     },
     {
+      "slug": "lead-discovery",
+      "name": "lead-discovery",
+      "category": "capabilities",
+      "description": "Orchestrator that runs first for lead generation requests. Gathers business context via website analysis or questions, identifies competitors, builds ICP, and routes to signal skills with pre-filled inputs.",
+      "tags": "lead-generation, research, competitive-intel",
+      "path": "skills/packs/lead-gen-devtools/lead-discovery",
+      "files": [
+        "skills/packs/lead-gen-devtools/lead-discovery/SKILL.md"
+      ],
+      "metadata": {
+        "slug": "lead-discovery",
+        "category": "capabilities",
+        "pack": "lead-gen-devtools",
+        "tags": [
+          "lead-generation",
+          "research",
+          "competitive-intel"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install lead-gen-devtools",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
       "slug": "lead-enrichment",
       "name": "lead-enrichment",
       "category": "capabilities",
@@ -4188,6 +4400,35 @@
       }
     },
     {
+      "slug": "product-reel-generator",
+      "name": "product-reel-generator",
+      "category": "capabilities",
+      "description": "Generates Instagram-ready product reels from any e-commerce product page URL. Scrapes product images, classifies by type, generates AI-animated clips via Higgsfield API, creates text overlays with style presets, and composes a 15-20 second reel with music. Supports model-based and product-only reels.",
+      "tags": "content",
+      "path": "skills/packs/video-production/product-reel-generator",
+      "files": [
+        "skills/packs/video-production/product-reel-generator/SKILL.md",
+        "skills/packs/video-production/product-reel-generator/scripts/higgsfield_video.py",
+        "skills/packs/video-production/product-reel-generator/skill.meta.json"
+      ],
+      "metadata": {
+        "slug": "product-reel-generator",
+        "category": "capabilities",
+        "pack": "video-production",
+        "tags": [
+          "content"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install video-production",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
       "slug": "programmatic-seo-planner",
       "name": "programmatic-seo-planner",
       "category": "composites",
@@ -4967,6 +5208,35 @@
       }
     },
     {
+      "slug": "talking-head-video",
+      "name": "talking-head-video",
+      "category": "capabilities",
+      "description": "Creates talking head videos from any source material (docs, changelogs, blog posts, notes, transcripts). Produces multi-scene videos with avatar narration over screenshots/images using HeyGen v2 API. Supports Quick Shot and Full Producer modes.",
+      "tags": "content",
+      "path": "skills/packs/video-production/talking-head-video",
+      "files": [
+        "skills/packs/video-production/talking-head-video/AVATAR-CONFIG.example.md",
+        "skills/packs/video-production/talking-head-video/SKILL.md",
+        "skills/packs/video-production/talking-head-video/skill.meta.json"
+      ],
+      "metadata": {
+        "slug": "talking-head-video",
+        "category": "capabilities",
+        "pack": "video-production",
+        "tags": [
+          "content"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install video-production",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
       "slug": "tam-builder",
       "name": "tam-builder",
       "category": "capabilities",
@@ -5316,6 +5586,62 @@
         "source": "orthogonal",
         "installation": {
           "base_command": "npx goose-skills install verify-email",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
+      "slug": "video-clipper",
+      "name": "video-clipper",
+      "category": "capabilities",
+      "description": "Repurposes long-form video (podcasts, interviews, talks) into short-form vertical clips for Instagram Reels, TikTok, and YouTube Shorts. Handles transcription, moment selection, clip extraction, speaker-tracked reframing (16:9 to 9:16), and animated captions.",
+      "tags": "content",
+      "path": "skills/packs/video-production/video-clipper",
+      "files": [
+        "skills/packs/video-production/video-clipper/SKILL.md",
+        "skills/packs/video-production/video-clipper/skill.meta.json"
+      ],
+      "metadata": {
+        "slug": "video-clipper",
+        "category": "capabilities",
+        "pack": "video-production",
+        "tags": [
+          "content"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install video-production",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
+      "slug": "video-polish",
+      "name": "video-polish",
+      "category": "capabilities",
+      "description": "Takes an existing screen recording or demo video and adds professional zoom/pan effects synchronized to the narration. Uses transcript-driven zoom targeting and Remotion for rendering. Optionally replaces audio with a soundtrack.",
+      "tags": "content",
+      "path": "skills/packs/video-production/video-polish",
+      "files": [
+        "skills/packs/video-production/video-polish/SKILL.md",
+        "skills/packs/video-production/video-polish/skill.meta.json"
+      ],
+      "metadata": {
+        "slug": "video-polish",
+        "category": "capabilities",
+        "pack": "video-production",
+        "tags": [
+          "content"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install video-production",
           "supports": [
             "claude",
             "cursor",

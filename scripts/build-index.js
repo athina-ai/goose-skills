@@ -7,7 +7,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+// ROOT defaults to the repo root, but tests can override via env var.
+const ROOT = process.env.GOOSE_SKILLS_ROOT
+  ? path.resolve(process.env.GOOSE_SKILLS_ROOT)
+  : path.resolve(__dirname, '..');
 const OUTPUT = path.join(ROOT, 'skills-index.json');
 
 function parseFrontmatter(content) {
@@ -173,13 +176,71 @@ function scanPacks(registrySkills) {
   return packs;
 }
 
-const skills = [
+const registrySkills = [
   ...scanCategory('capabilities'),
   ...scanCategory('composites'),
   ...scanCategory('playbooks'),
-].sort((a, b) => a.slug.localeCompare(b.slug));
+];
 
-const packs = scanPacks(skills).sort((a, b) => a.slug.localeCompare(b.slug));
+const packs = scanPacks(registrySkills).sort((a, b) => a.slug.localeCompare(b.slug));
+
+// Promote pack-only sub-skills (source: 'pack') into the top-level skills[]
+// so downstream consumers (DB sync, CMS push) that iterate idx.skills[] see them.
+// Registry-source sub-skills are intentionally NOT promoted here — they already
+// exist top-level via scanCategory and pack.skills[] just references them.
+const promotedFromPacks = [];
+const registrySlugs = new Set(registrySkills.map((s) => s.slug));
+const promotedSlugs = new Map(); // slug -> originating pack slug
+for (const pack of packs) {
+  for (const sub of pack.skills) {
+    if (sub.source !== 'pack') continue;
+
+    if (registrySlugs.has(sub.slug)) {
+      throw new Error(
+        `Pack "${pack.slug}": sub-skill slug "${sub.slug}" collides with a top-level registry skill`,
+      );
+    }
+
+    const existingPack = promotedSlugs.get(sub.slug);
+    if (existingPack) {
+      throw new Error(
+        `Pack-only sub-skill slug "${sub.slug}" appears in multiple packs ` +
+          `("${existingPack}" and "${pack.slug}"). ` +
+          `Sub-skill slugs must be globally unique — downstream consumers upsert by slug.`,
+      );
+    }
+    promotedSlugs.set(sub.slug, pack.slug);
+
+    promotedFromPacks.push({
+      slug: sub.slug,
+      name: sub.name,
+      // Treat pack sub-skills as capabilities for catalog purposes.
+      // The backend's PredefinedSkillsSyncService gates is_active by category;
+      // anything outside ACTIVE_REPO_CATEGORIES gets retired immediately.
+      category: 'capabilities',
+      description: sub.description,
+      tags: Array.isArray(pack.metadata && pack.metadata.tags) ? pack.metadata.tags.join(', ') : '',
+      path: sub.path,
+      files: sub.files,
+      metadata: {
+        slug: sub.slug,
+        category: 'capabilities',
+        pack: pack.slug,
+        tags: Array.isArray(pack.metadata && pack.metadata.tags) ? pack.metadata.tags : [],
+        // Pack sub-skills aren't installable standalone — install the parent pack.
+        installation: {
+          base_command: `npx goose-skills install ${pack.slug}`,
+          supports: ['claude', 'cursor', 'codex'],
+        },
+      },
+    });
+  }
+}
+
+const skills = [
+  ...registrySkills,
+  ...promotedFromPacks,
+].sort((a, b) => a.slug.localeCompare(b.slug));
 
 // Validate no slug collisions between packs and skills
 const skillSlugs = new Set(skills.map((s) => s.slug));
