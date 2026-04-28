@@ -1,12 +1,12 @@
 # goose-graphics — Agent Skills pack for visual graphics
 
-`goose-graphics` is a portable visual skill pack for the Agent Skills ecosystem. It bundles 36 aesthetic presets (each authored in the VoltAgent 9-section DESIGN.md format), 7 social-first format specs (carousel, story, infographic, slides, poster, chart, tweet), an extract-style workflow for reference images, and a Playwright-based HTML-to-PNG export pipeline.
+`goose-graphics` is a portable visual skill pack for the Agent Skills ecosystem. Styles and formats live in the central Gooseworks library — fetched on demand via `npx gooseworks` instead of bundled into this repo. The skill pairs that catalog with an extract-style workflow for reference images, an Unsplash + ASCII art image-sourcing layer, and a Playwright-based HTML-to-PNG export pipeline.
 
-Any host that reads `SKILL.md` can load the pack — Claude Code agents calling it for automated render, Goose pipelines wiring it into content generation, Cursor/Codex projects picking it up via `.cursor/rules/` or `~/.codex/skills/`. Individual style files under `styles/_full/<slug>.md` are authored to Claude Design's DESIGN.md spec so they can also be uploaded directly into CD as design-system scaffolds.
+Any host that reads `SKILL.md` can load the pack — Claude Code agents calling it for automated render, Goose pipelines wiring it into content generation, Cursor/Codex projects picking it up via `.cursor/rules/` or `~/.codex/skills/`. Each published style ships a slim DESIGN.md spec, fetchable via `npx gooseworks styles get <slug>`, that can also be uploaded directly into Claude Design as a design-system scaffold.
 
 ## Host compatibility
 
-`SKILL.md` auto-loads on most Agent Skills hosts once the pack is installed at the right path. Claude Design is the one host that does not auto-load skill packs — instead, it consumes individual style files (DESIGN.md) via manual upload from `styles/_full/<slug>.md`.
+`SKILL.md` auto-loads on most Agent Skills hosts once the pack is installed at the right path. Claude Design is the one host that does not auto-load skill packs — instead, it consumes individual style files (DESIGN.md) one at a time, fetched on demand via `npx gooseworks styles get <slug>`.
 
 | Host | Install | Notes |
 |---|---|---|
@@ -16,7 +16,7 @@ Any host that reads `SKILL.md` can load the pack — Claude Code agents calling 
 | Goose (Block) | (same install as above) | Auto-discovers `~/.claude/skills/` + `~/.config/goose/skills/` |
 | Cursor | `npx goose-skills install goose-graphics --cursor --project-dir .` | Writes `.cursor/rules/goose-goose-graphics.mdc` |
 | Codex (OpenAI) | `npx goose-skills install goose-graphics --codex` | Writes `~/.codex/skills/goose-graphics/` |
-| Claude Design | Download a DESIGN.md from styles.gooseworks.ai and upload via CD's "Create new design system" | Per-style DESIGN.md upload; no CLI sync |
+| Claude Design | `npx gooseworks styles get <slug>` → upload the resulting DESIGN.md via CD's "Create new design system" | Per-style DESIGN.md upload; no CLI sync |
 
 ## Directory Structure
 
@@ -26,60 +26,27 @@ goose-graphics/
   README.md                       # This file
   skill.meta.json                 # Goose-skills installation metadata
   .claude-plugin/plugin.json      # Claude Code plugin descriptor
-  formats/                        # 7 format specs
-    carousel.md, story.md, infographic.md, slides.md,
-    poster.md, chart.md, tweet.md
-  styles/                         # 36 slim style preset files + tools
-    index.json                    # Canonical list of all 36 presets
-    <slug>.md × 36                # Slim presets (~6-8KB each)
-    extract-style.md              # Derive a custom style from a reference image
-    _full/                        # Full-prose archive (~30KB each)
-      <slug>.md × 36
+  extract-style.md                # Derive a publishable custom style from a reference image
   sources/
-    unsplash.md, ascii-art.md
+    unsplash.md, ascii-art.md     # Image-sourcing helpers
   screenshot/
     screenshot.js, package.json   # Playwright HTML-to-PNG export
-  examples/
-    <style-slug>/                 # Per-style example outputs
-    references/canva-figma/       # Canva + Figma reference screenshots
 ```
 
-## Formats
+Styles, formats, and example renders live in the central Gooseworks library — discoverable via `npx gooseworks styles list` and `npx gooseworks formats list`.
 
-| Format | Dimensions | Output |
-|--------|-----------|--------|
-| Carousel | 1080x1080px per slide | One PNG per slide (up to 10) |
-| Story | 1080x1920px per slide | One PNG per slide (up to 10) |
-| Infographic | 1080px wide, variable height | Single PNG |
-| Slides | 1920x1080px per slide | One PNG per slide |
-| Poster | 1080x1350px | Single PNG |
-| Chart | 1080x1080px | Single PNG |
-| Tweet | 1080x1080px | Single PNG |
+## Discovering styles and formats
 
-## Style Presets (34 total)
+```bash
+npx gooseworks styles list
+npx gooseworks styles search "warm editorial"
+npx gooseworks styles get <slug>          # returns the slim DESIGN.md
 
-The single source of truth is `styles/index.json`. The README, SKILL.md, and any consuming tool should read from that file. Presets are grouped into 7 moods:
+npx gooseworks formats list
+npx gooseworks formats get <slug>         # returns the format spec
+```
 
-| Group | Count | Slugs |
-|-------|-------|-------|
-| Dark & Moody | 6 | `midnight-editorial`, `deep-ocean`, `golden-dusk`, `terminal`, `bw-editorial-drop`, `masked-object-editorial` |
-| Light & Editorial | 7 | `clean-slate`, `paper-and-ink`, `matt-gray`, `magazine-red`, `sunburst-editorial`, `product-minimal`, `archive-fashion` |
-| Organic & Warm | 5 | `warm-earth`, `garden-blur`, `peach-pop`, `pastel-organic-shapes`, `aurora-app-launch` |
-| Bold & Energetic | 5 | `electric-burst`, `highlighter-yellow`, `heatwave-orange`, `split-yellow-product`, `blueprint-sticky` |
-| Retro & Cinematic | 5 | `cinematic-romance`, `vintage-duotone-poster`, `retro-line-art`, `iridescent-y2k`, `ink-doodle-event` |
-| Structural & Technical | 5 | `brutalist`, `frosted-lens`, `card-toss`, `venn-infographic`, `social-post-card` |
-| Friendly Corporate | 1 | `mint-pixel-corporate` |
-
-You can also extract a custom style from any reference image via `styles/extract-style.md`.
-
-## Slim vs Full Style Files
-
-Each style ships in two forms:
-
-- **Slim** (`styles/<slug>.md`) — ~6-8KB each. A tight, consistent spec: palette (hex + role), typography rules (fonts, weights, tracking, Google Fonts link), layout rules, do/don't list, and reusable CSS snippets. **This is what the skill loads during generation.** Designed to fit comfortably inside a prompt without ballooning context.
-- **Full** (`styles/_full/<slug>.md`) — ~30KB each. The original atmospheric prose brief with extensive component patterns, format adaptation notes, and detailed rationale. Preserved verbatim from the pre-slim baseline. Use this when you need the long-form voice — for extract-style prompting, when the slim file is ambiguous, or when building net-new related styles.
-
-All 36 styles follow the same slim template so Claude and humans can both reason about them predictably.
+Always list or search before assuming a slug exists — the catalog is community-driven.
 
 ## Args-based Invocation
 
@@ -101,10 +68,22 @@ This skill supports three invocation modes. See SKILL.md §2 for full details.
 
 Flags:
 
-- `--style <slug>` — any slug in `styles/index.json`
-- `--format <format>` — `carousel` · `story` · `infographic` · `slides` · `poster` · `chart` · `tweet`
+- `--style <slug>` — any slug returned by `npx gooseworks styles list`
+- `--format <slug>` — any slug returned by `npx gooseworks formats list`
 - `--brief "..."` — topic / content description
 - `--ref <image-path>` — use image-to-style extraction instead of a preset
+
+## Publishing styles and formats
+
+When the user creates a new aesthetic via `extract-style.md` (or `/goose-graphics-create-style`) and wants other agents to discover it, publish to the catalog:
+
+```bash
+cd <working-dir-with-bundle>
+npx gooseworks styles publish      # uses gooseworks-style.json
+npx gooseworks formats publish     # uses gooseworks-format.json
+```
+
+See SKILL.md §17 for the manifest shapes.
 
 ## Image Sourcing
 

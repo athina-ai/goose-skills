@@ -15,11 +15,11 @@
     ]
   },
   "features": [
-    "36 aesthetic style presets",
-    "7 output formats (carousel, story, infographic, slides, poster, chart, tweet)",
+    "Community-driven style catalog discovered via npx gooseworks styles list/search/get",
+    "Community-driven format catalog discovered via npx gooseworks formats list/search/get",
     "Unsplash + ASCII image sourcing",
     "Playwright PNG export",
-    "Image-to-style extraction",
+    "Image-to-style extraction with publish to the central catalog",
     "Args-based slash command invocation"
   ]
 }

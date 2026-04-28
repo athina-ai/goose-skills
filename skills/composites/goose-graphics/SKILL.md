@@ -1,15 +1,15 @@
 ---
 name: goose-graphics
-description: Portable visual skill pack for the Agent Skills ecosystem (Claude Code, Claude Desktop, Claude Cowork, Claude Design, Goose, Cursor, Codex). Ships 36 aesthetic presets in DESIGN.md format, 7 social-first format specs, extract-style from reference images, and automatic PNG export via Playwright.
+description: Portable visual skill pack for the Agent Skills ecosystem (Claude Code, Claude Desktop, Claude Cowork, Claude Design, Goose, Cursor, Codex). Discovers community-published styles + formats via the gooseworks CLI, runs an extract-style workflow on reference images, and exports rendered PNGs via Playwright.
 ---
 
 ## 1. Overview
 
-`goose-graphics` is a portable visual skill pack for the Agent Skills ecosystem. It bundles 36 aesthetic presets (each authored in the VoltAgent 9-section DESIGN.md format), 7 social-first format specs (carousel, story, infographic, slides, poster, chart, tweet), an extract-style workflow for reference images, and a Playwright-based HTML-to-PNG export pipeline.
+`goose-graphics` is a portable visual skill pack for the Agent Skills ecosystem. Styles and formats live in the central Gooseworks library — fetched on demand via `npx gooseworks` instead of bundled into this repo. The skill pairs that catalog with an extract-style workflow for reference images, an Unsplash + ASCII art image-sourcing layer, and a Playwright-based HTML-to-PNG export pipeline.
 
-It loads in any host that reads `SKILL.md` — Claude Code agents calling it for automated render, Goose pipelines wiring it into content generation, Cursor/Codex projects picking it up via `.cursor/rules/` or `~/.codex/skills/`. Individual style files under `styles/_full/<slug>.md` are authored to Claude Design's DESIGN.md spec so they can also be uploaded directly into CD as design-system scaffolds.
+It loads in any host that reads `SKILL.md` — Claude Code agents calling it for automated render, Goose pipelines wiring it into content generation, Cursor/Codex projects picking it up via `.cursor/rules/` or `~/.codex/skills/`. Each style ships a slim DESIGN.md spec via `npx gooseworks styles get <slug>`, which can also be uploaded directly into Claude Design as a design-system scaffold.
 
-Everything is self-contained: format templates, style systems, image sourcing instructions, and the screenshot pipeline all live within this skill pack directory.
+Format templates, image-sourcing helpers, and the screenshot pipeline live in this skill pack. Styles, formats, and example renders are fetched on demand from the central library — no slugs are baked in.
 
 ## 2. Invocation
 
@@ -21,10 +21,10 @@ This skill supports **three invocation modes** — all-args, partial-args, and i
 /goose-graphics --style <slug> --format <format> [--brief "..."] [--ref <image-path>]
 ```
 
-- `--style <slug>` — one of the preset slugs (see `styles/index.json` or §6). Required for style-selected generation. Omit to let the user pick interactively.
-- `--format <format>` — one of `carousel`, `story`, `infographic`, `slides`, `poster`, `chart`, `tweet`. Required for format-selected generation.
+- `--style <slug>` — any community-published style slug. Discover with `npx gooseworks styles list` / `search`. Required for style-selected generation. Omit to let the user pick interactively.
+- `--format <format>` — any community-published format slug (e.g., `carousel`, `story`, `infographic`, `slides`, `poster`, `chart`, `tweet`, plus any community additions). Discover with `npx gooseworks formats list`. Required for format-selected generation.
 - `--brief "..."` — the topic / content description. Replaces the Content Discovery phase.
-- `--ref <image-path>` — if present, extract an ad-hoc style from the reference image for this single render instead of using a preset. When `--ref` is provided, `--style` is ignored. **For creating a persistent named style preset that includes example renders, use the dedicated `/goose-graphics-create-style` skill instead.**
+- `--ref <image-path>` — if present, extract an ad-hoc style from the reference image for this single render instead of using a preset. When `--ref` is provided, `--style` is ignored. **For creating a persistent published style that other agents can discover, use the dedicated `/goose-graphics-create-style` skill instead.**
 
 **Three branches:**
 
@@ -48,7 +48,7 @@ This skill supports **three invocation modes** — all-args, partial-args, and i
 /goose-graphics
 ```
 
-To **create a persistent named style preset** (slim spec + all 7 format example renders + index/manifest registration), use the dedicated `/goose-graphics-create-style` skill instead.
+To **create a persistent published style** (slim spec + hero render + a few additional examples, pushed to the central library so other agents can discover it), use the dedicated `/goose-graphics-create-style` skill instead.
 
 ### 2.3 Defaults when args are partial but unambiguous
 
@@ -56,9 +56,80 @@ To **create a persistent named style preset** (slim spec + all 7 format example 
 - If `--format` is missing, default to asking (there is no safe default across formats).
 - If `--style` is missing and `--ref` is missing, ask — style is load-bearing.
 
-## 3. Host compatibility
+## 3. Discovering styles and formats
 
-`SKILL.md` (this file) auto-loads on most Agent Skills hosts once the pack is installed at the right path. Claude Design is the one host that does not auto-load skill packs — instead, it consumes individual style files (DESIGN.md) via manual upload from `styles/_full/<slug>.md`.
+Styles and formats live in the central Gooseworks library, not in this skill pack. **Always list or search before assuming a slug exists** — the catalog is community-driven and changes over time.
+
+```bash
+# List or search styles
+npx gooseworks styles list
+npx gooseworks styles search "warm editorial"
+npx gooseworks styles list --mood "Organic & Warm" --tag warm
+
+# Fetch a specific style's DESIGN.md (the slim spec) — pipe into Claude Design,
+# or include in the agent context for HTML generation
+npx gooseworks styles get <slug>
+
+# Same shape for formats
+npx gooseworks formats list
+npx gooseworks formats search "vertical"
+npx gooseworks formats get <slug>
+```
+
+When the user names a style or format, run `list` / `search` first, then `get` the spec for the chosen slug. Never assume a slug exists from memory — slugs come and go as the community publishes and retires entries.
+
+## 4. Publishing your style
+
+When the user creates a new aesthetic via `extract-style.md` (or via the dedicated `/goose-graphics-create-style` skill) and is happy with it, publish it to the community library so other agents and users can discover it:
+
+```bash
+cd <directory-with-rendered-examples>
+npx gooseworks styles publish
+```
+
+The CLI expects a `gooseworks-style.json` manifest in the working directory plus the referenced PNG files. See **§13 Manifest format** for the exact shape.
+
+### 4.1 Description-writing guidelines (load-bearing)
+
+The description is what makes the style discoverable by AI agents searching the catalog. Treat it as a search index, not flavor text.
+
+- **50–200 words, keyword-dense.**
+- **Lead with mood + use case.** "Bold magazine-cover energy for product launches and event posters."
+- **Mention typography signals.** "Massive condensed sans-serif headlines paired with a delicate body serif."
+- **Mention palette signals.** "Rust orange + cream + near-black."
+- **Mention industry / audience fit if relevant.** "DTC beauty, indie publishing, event flyers."
+- **Avoid generic adjectives alone.** "Beautiful," "modern," "clean" mean nothing without concrete signals — pair them with palette, typography, or industry context.
+
+### 4.2 Tag-writing guidelines
+
+- **3–10 lowercase tags.**
+- Cover: **mood** (warm, dark, energetic), **density** (sparse, dense), **formality** (corporate, editorial, playful), **era** (mid-century, y2k, retro), **industry-fit** (saas, dtc, beauty, finance).
+- Skip tags that just restate the name.
+
+### 4.3 Example count guidance
+
+- **Hero is mandatory** — exactly one example marked `isHero: true`. Pick the format that best showcases the style.
+- **2–3 additional formats recommended** so the directory tile shows variety.
+- **Hero priority order** if you can render multiple: `poster > carousel > infographic > slides > chart > story > tweet`.
+
+## 5. Publishing your format
+
+When the existing community-published formats don't fit the user's canvas (e.g., LinkedIn banner 1584×396, story cover 1080×1920, event flyer 8.5×11in), use the sibling `/goose-graphics-create-format` skill to produce a format spec and at least one rendered example, then publish:
+
+```bash
+cd <directory-with-format-bundle>
+npx gooseworks formats publish
+```
+
+Format publishing **requires at least one rendered example** — the backend rejects an empty `examples` array. See **§13 Manifest format** for the exact shape of `gooseworks-format.json`.
+
+Description and tag guidelines for formats follow the same rules as styles (§4.1, §4.2), but lead with **dimensions + content density** instead of mood:
+
+> "1080×1920 vertical canvas for Instagram and TikTok stories. Single-panel composition, 5-word title max, large hero image or stat. Use for quick announcements and engagement posts where the viewer scrolls past in 2 seconds."
+
+## 6. Host compatibility
+
+`SKILL.md` (this file) auto-loads on most Agent Skills hosts once the pack is installed at the right path. Claude Design is the one host that does not auto-load skill packs — instead, it consumes individual style files (DESIGN.md) one at a time via manual upload, fetched on demand via `npx gooseworks styles get <slug>`.
 
 | Host | Install | Notes |
 |---|---|---|
@@ -68,9 +139,9 @@ To **create a persistent named style preset** (slim spec + all 7 format example 
 | Goose (Block) | (same install as above) | Auto-discovers `~/.claude/skills/` + `~/.config/goose/skills/` |
 | Cursor | `npx goose-skills install goose-graphics --cursor --project-dir .` | Writes `.cursor/rules/goose-goose-graphics.mdc` |
 | Codex (OpenAI) | `npx goose-skills install goose-graphics --codex` | Writes `~/.codex/skills/goose-graphics/` |
-| Claude Design | Download a DESIGN.md from styles.gooseworks.ai and upload via CD's "Create new design system" | Per-style DESIGN.md upload; no CLI sync |
+| Claude Design | `npx gooseworks styles get <slug>` → upload the resulting DESIGN.md via CD's "Create new design system" | Per-style DESIGN.md upload; no CLI sync |
 
-## 4. First-Run Setup
+## 7. First-Run Setup
 
 Before first use, check whether the screenshot tool's dependencies are installed. Look for a `node_modules/` directory inside the `screenshot/` folder (relative to this skill file).
 
@@ -82,21 +153,21 @@ cd [skill-pack-dir]/screenshot && npm install && npx playwright install chromium
 
 Replace `[skill-pack-dir]` with the absolute path to the directory containing this SKILL.md file.
 
-## 5. Interactive Workflow
+## 8. Interactive Workflow
 
 ```
 1. Discover Intent   --> What format? What content?
-2. Select Style      --> Choose from 36 presets or extract from reference image
+2. Select Style      --> Pick from the catalog or extract from reference image
 3. Select Sources    --> Unsplash photos? ASCII art? None?
 4. Set Output Path   --> Where to save exports
-5. Generate HTML     --> Using format skill + style preset + sources
+5. Generate HTML     --> Using format spec + style spec + sources
 6. Screenshot        --> Playwright PNG export
 7. Deliver           --> Present results with file listing
 ```
 
-## 6. Step 1: Discover Intent
+## 9. Step 1: Discover Intent
 
-Ask the user what they want to create. Present these format options:
+Ask the user what they want to create. Run `npx gooseworks formats list` to see the current catalog. The seven baseline formats are:
 
 | Format | Dimensions | Best For |
 |--------|-----------|----------|
@@ -108,77 +179,35 @@ Ask the user what they want to create. Present these format options:
 | **Chart** | 1080x1080px | Single data chart graphic |
 | **Tweet** | 1080x1080px | Tweet-sized square screenshot |
 
-Once the user chooses a format, read the corresponding format skill file:
+The community library may publish additional formats (LinkedIn banners, story covers, etc.) — always run `list` first rather than assuming the seven above are exhaustive. If none of the available formats fit the user's needs, suggest the `/goose-graphics-create-format` skill.
 
-```
-formats/carousel.md
-formats/story.md
-formats/infographic.md
-formats/slides.md
-formats/poster.md
-formats/chart.md
-formats/tweet.md
+Once the user chooses a format, fetch its full spec:
+
+```bash
+npx gooseworks formats get <format-slug>
 ```
 
-Then follow that format skill's **Content Discovery** phase to gather the topic, content, and any other format-specific inputs from the user.
+The returned `spec.md` (or content rules) describes layout, content density, and per-section content rules. Follow its **Content Discovery** phase to gather the topic, content, and any other format-specific inputs from the user.
 
-## 7. Step 2: Select Style
+## 10. Step 2: Select Style
 
-Present the **34 style presets**, grouped by mood. The canonical list lives in `styles/index.json` — when in doubt, read that file.
+If the user hasn't specified a style, point them at the full catalog so they can browse visually:
 
-**Dark & Moody**
-1. **Midnight Editorial** — Dark, elegant magazine aesthetic with copper accents.
-2. **Deep Ocean** — Calm cyan glow on deep blue-black.
-3. **Golden Dusk** — Warm gold highlights on dark navy.
-4. **Terminal** — Green-on-dark monospace hacker aesthetic.
-5. **BW Editorial Drop** — Grayscale photo top + yellow Anton display on black drop panel.
-6. **Masked Object Editorial** — Navy + photo clipped into an object silhouette + italic Playfair.
+> Browse the style catalog at **https://skills.gooseworks.ai/styles** to see every published style with rendered examples.
 
-**Light & Editorial**
-7. **Clean Slate** — Ultra-minimal white canvas, single blue accent.
-8. **Paper & Ink** — Classic serif editorial with red accent on cream.
-9. **Matt Gray** — Playfair italic green + yellow pill tags on light gray.
-10. **Magazine Red** — Massive tomato-red condensed headlines on cream paper.
-11. **Sunburst Editorial** — Mid-century book cover feel with serif + collage accents.
-12. **Product Minimal** — Apple-style white canvas, hero product photo, underlined URL.
-13. **Archive Fashion** — Stone beige catalog frame + brown photo inset + pink sticker.
+Then run `npx gooseworks styles list` (or `search "..."` / `list --mood "..." --tag ...`) to surface relevant options inline. Present the candidates in groups by mood with their taglines so the user can pick.
 
-**Organic & Warm**
-14. **Warm Earth** — Organic terracotta and sage on cream.
-15. **Garden Blur** — Soft botanical backgrounds with translucent card overlays.
-16. **Peach Pop** — DTC beauty: monospace testimonials on peach + blue blocks.
-17. **Pastel Organic Shapes** — Cream canvas with one pistachio circle half off-frame.
-18. **Aurora App Launch** — Rainbow mesh gradient + phone mockup + frosted-glass footer.
+The user may also say: **"I have a reference image"** — in that case, read `extract-style.md` (in this skill pack) and follow its workflow to derive a custom style from the provided image. That workflow ends in a publishable bundle (`gooseworks-style.json` + rendered PNGs) the user can publish via `npx gooseworks styles publish`. After publishing, continue the workflow from Step 3 onward using the new slug.
 
-**Bold & Energetic**
-19. **Electric Burst** — Bold neon yellow and hot pink on black.
-20. **Highlighter Yellow** — Saturated yellow + heavy black sans + white-rect italic emphasis.
-21. **Heatwave Orange** — Three-variant white/orange/black system + line-wave accents.
-22. **Split Yellow Product** — Vivid mustard 2/3 headline slab + gray body panel + yellow photo.
-23. **Blueprint Sticky** — Cobalt blueprint grid + tilted pink/yellow sticky notes.
+After the user picks a slug, fetch its slim spec:
 
-**Retro & Cinematic**
-24. **Cinematic Romance** — Portrait photo canvas + hot pink chancery script headlines.
-25. **Vintage Duotone Poster** — Forest green + dusty pink halftone, 1950s letterpress.
-26. **Retro Line Art** — Powder blue + cream hand-drawn cocktail-poster line art.
-27. **Iridescent Y2K** — Brutalist grid + chrome iridescent blob hero, Y2K club poster.
-28. **Ink Doodle Event** — Kraft paper + loose hand-drawn ink character + Yellowtail script.
+```bash
+npx gooseworks styles get <slug>
+```
 
-**Structural & Technical**
-29. **Brutalist** — Raw heavy borders, system fonts, no decoration.
-30. **Frosted Lens** — Glassmorphism + blurred photography backgrounds.
-31. **Card Toss** — Scattered tilted cards with sticky-note energy.
-32. **Venn Infographic** — Translucent three-circle Venn diagrams + floating info cards.
-33. **Social Post Card** — Blurred real scene + simulated Instagram post card as hero.
+The returned DESIGN.md contains everything you need to generate: palette, typography, layout, do/don'ts, and ready-to-paste CSS snippets.
 
-**Friendly Corporate**
-34. **Mint Pixel Corporate** — Pale mint + lime pixel-staircase corner decorations.
-
-The user may also say: **"I have a reference image"** — in that case, read `styles/extract-style.md` and follow its workflow to derive a custom style in slim format from the provided image. The extracted style is saved to `styles/<name>.md` alongside the presets and is immediately usable. After the style is saved, continue the workflow from Step 3 onward using the newly created style.
-
-After the user selects a preset, read the corresponding style file from `styles/<slug>.md` (e.g., `styles/midnight-editorial.md`, `styles/heatwave-orange.md`). Each slim style file contains everything you need to generate: palette, typography, layout, do/don'ts, and ready-to-paste CSS snippets. For the full prose deep-dive (rare — use for extract-style prompting or when nuance is missing), read `styles/_full/<slug>.md`.
-
-## 8. Step 3: Image Sources (Optional)
+## 11. Step 3: Image Sources (Optional)
 
 Ask the user: **"Do you want to include images in your graphic?"**
 
@@ -189,7 +218,7 @@ Options:
 - **Both** — Read both source files and incorporate both types.
 - **No images** — Skip this step entirely. The graphic will use pure CSS/HTML styling only.
 
-## 9. Step 4: Output Path
+## 12. Step 4: Output Path
 
 Ask the user: **"Where should I save the exports?"**
 
@@ -203,16 +232,16 @@ Within that directory, create a subfolder using this naming convention:
 
 For example: `2026-04-17-q2-product-roadmap/`
 
-## 10. Step 5: Generate HTML
+## 13. Step 5: Generate HTML
 
-Follow the chosen format skill's **HTML Generation** phase. When generating:
+Follow the chosen format spec's **HTML Generation** phase. When generating:
 
-- Apply the chosen style preset's CSS variables, typography rules, color palette, and spacing system — the slim style file has everything you need.
+- Apply the chosen style's CSS variables, typography rules, color palette, and spacing system — the DESIGN.md returned by `styles get` has everything you need.
 - Incorporate image sources (Unsplash URLs or ASCII art blocks) if the user selected any in Step 3.
-- Follow the format skill's content density limits and structural requirements exactly.
+- Follow the format spec's content density limits and structural requirements exactly.
 - Write all HTML files to the output directory established in Step 4.
 
-## 11. Step 6: Screenshot
+## 14. Step 6: Screenshot
 
 Run the screenshot script to export HTML files to high-resolution PNGs:
 
@@ -222,11 +251,11 @@ node [skill-pack-dir]/screenshot/screenshot.js --format FORMAT --input INPUT_PAT
 
 Where:
 - `[skill-pack-dir]` is the absolute path to this skill pack's directory.
-- `FORMAT` is one of: `carousel`, `story`, `infographic`, `slides`, `poster`, `chart`, `tweet`.
+- `FORMAT` is the format slug (e.g., `carousel`, `story`, `poster`, or any community slug whose spec defines a renderer profile).
 - `INPUT_PATH` is the directory or file containing the generated HTML.
 - `OUTPUT_PATH` is the directory where PNG files should be saved.
 
-## 12. Step 7: Deliver
+## 15. Step 7: Deliver
 
 Present the results to the user:
 
@@ -235,45 +264,96 @@ Present the results to the user:
 - Suggest how to preview: open the HTML files in a browser, or view the PNG files directly.
 - For carousels and slides, note the slide count and order.
 
-## 13. Special Modes
+## 16. Special Modes
 
-- **"Surprise me"** — Pick the carousel format and a random style preset from `styles/index.json`. Ask the user only for content/topic, then generate everything else automatically.
-- **Multi-format** — If the user says "make this as both a carousel and an infographic," run the full workflow twice using the same content and style but different format skills. Save outputs in separate subdirectories.
-- **Style preview** — Before committing to full generation, produce a single sample slide or section so the user can approve the visual direction. If they want changes, adjust the style or switch presets before generating the rest.
+- **"Surprise me"** — Pick the carousel format and a random style returned by `npx gooseworks styles list`. Ask the user only for content/topic, then generate everything else automatically.
+- **Multi-format** — If the user says "make this as both a carousel and an infographic," run the full workflow twice using the same content and style but different format slugs. Save outputs in separate subdirectories.
+- **Style preview** — Before committing to full generation, produce a single sample slide or section so the user can approve the visual direction. If they want changes, adjust the style or switch slugs before generating the rest.
 
-## 14. File Reference
+## 17. Manifest format
 
-### Formats
-| File | Description |
-|------|-------------|
-| `formats/carousel.md` | Multi-slide square carousel (1080x1080px). LinkedIn/Instagram. |
-| `formats/story.md` | Vertical 9:16 stories (1080x1920px). Instagram/LinkedIn Stories, TikTok. |
-| `formats/infographic.md` | Tall vertical infographic (1080px wide, variable height). |
-| `formats/slides.md` | Widescreen presentation slides (1920x1080px). |
-| `formats/poster.md` | Portrait poster graphic (1080x1350px). |
-| `formats/chart.md` | Single data chart graphic. |
-| `formats/tweet.md` | Tweet-sized square screenshot. |
+These manifests are CLI inputs the user produces in their own working directory before running `publish`. They never live in this repo.
 
-### Styles
+### 17.1 Style manifest (`gooseworks-style.json`)
 
-The canonical list of all 36 style presets lives in `styles/index.json` (slug, display name, mood group, one-line tagline). Individual slim style files at `styles/<slug>.md` give you the full spec (palette, typography, layout, do/don't, CSS snippets). Archived full-prose versions live in `styles/_full/<slug>.md` if you need the deeper atmospheric reference.
+```json
+{
+  "name": "Desert Sunset",
+  "slug": "desert-sunset",
+  "description": "Warm dusk gradients with rust and amber on cream paper. Editorial serif headlines paired with a single sans-serif accent. Built for DTC beauty product launches, lifestyle long-form, and event posters where you want a confident, sun-soaked, high-end magazine feel.",
+  "designMd": "# Desert Sunset\n\n…full slim spec markdown — palette table, typography table, layout rules, do/don'ts, optional CSS variables block…",
+  "moodGroup": "Organic & Warm",
+  "tags": ["warm", "desert", "editorial", "serif", "dtc"],
+  "palette": [
+    { "hex": "#E06A2C", "role": "primary" },
+    { "hex": "#3A1F1A", "role": "ink" },
+    { "hex": "#F5EFE7", "role": "paper" }
+  ],
+  "examples": [
+    { "format": "poster", "isHero": true, "file": "./poster.png", "caption": "Hero render" },
+    { "format": "carousel", "file": "./carousel.png" },
+    { "format": "story", "file": "./story.png" }
+  ]
+}
+```
 
-Ad-hoc styles extracted via `--ref` or the "I have a reference image" interactive option may be saved to `styles/<name>.md` in the same slim format as presets, but they are not added to `index.json` and ship without example renders. To create a properly registered preset with full example coverage, use the `/goose-graphics-create-style` skill.
+Field constraints:
+- `name`: 1–120 chars
+- `slug`: optional kebab-case `[a-z0-9-]+`; backend auto-generates if absent. A collision returns 409 with a `suggestedSlug` — the CLI handles re-submission.
+- `description`: 20–1000 chars (**required**)
+- `designMd`: minimum 50 chars (**required**)
+- `moodGroup`: optional; one of `"Dark & Moody"`, `"Light & Editorial"`, `"Organic & Warm"`, `"Bold & Energetic"`, `"Retro & Cinematic"`, `"Structural & Technical"`, `"Friendly Corporate"`
+- `tags`: array of strings (default `[]`)
+- `palette`: array of `{ hex: "#RRGGBB", role?: string }`
+- `examples`: array, **minimum 1 entry**, **exactly one** with `isHero: true`
+- `examples[].format`: slug of an existing graphics format (any from `npx gooseworks formats list`)
+- `examples[].file`: relative path to the PNG in the working directory
 
-### Image Sources
+### 17.2 Format manifest (`gooseworks-format.json`)
+
+```json
+{
+  "name": "LinkedIn Banner",
+  "slug": "linkedin-banner",
+  "description": "1584×396 LinkedIn profile background. Single horizontal banner; minimal text (4 words max), abstract backdrop, optional small logo lower-right. Use for professional brand presence.",
+  "width": 1584,
+  "height": 396,
+  "contentRulesMd": "## Rules\n\n- Title: 4 words max, large display, top-left or center\n- No body copy\n- One brand mark optional, lower-right, ≤8% of canvas\n…",
+  "tags": ["linkedin", "banner", "horizontal", "professional"],
+  "examples": [
+    { "file": "./example-1.png", "styleSlug": "matt-gray", "caption": "Paired with matt-gray" },
+    { "file": "./example-2.png", "styleSlug": "neon-dashboard" }
+  ]
+}
+```
+
+Field constraints:
+- `name`: 1–120 chars
+- `slug`: optional kebab-case
+- `description`: 20–1000 chars (**required**)
+- `width` / `height`: integers, 64–8192
+- `contentRulesMd`: minimum 50 chars (**required**)
+- `tags`: array of strings
+- `examples`: array, **minimum 1 entry** (**required** — the backend rejects empty)
+- `examples[].styleSlug`: optional reference to which style was used to render the example
+
+## 18. File reference
+
+This skill pack ships only the local helpers needed to render and source images — styles, formats, and example renders all come from the central library via `npx gooseworks`.
+
+### Image sources
 | File | Description |
 |------|-------------|
 | `sources/unsplash.md` | Search and embed Unsplash stock photography. |
 | `sources/ascii-art.md` | Generate and embed ASCII art decorations. |
 
-### Screenshot Tool
+### Extract style
+| File | Description |
+|------|-------------|
+| `extract-style.md` | Derive a custom style from a reference image and produce a publishable bundle (`gooseworks-style.json` + rendered PNGs). |
+
+### Screenshot tool
 | File | Description |
 |------|-------------|
 | `screenshot/screenshot.js` | Playwright-based HTML-to-PNG export script. |
 | `screenshot/package.json` | Node.js dependencies for the screenshot tool. |
-
-### Examples
-| Path | Description |
-|------|-------------|
-| `examples/<style-slug>/` | Per-style example output directories. |
-| `examples/references/canva-figma/` | Canva + Figma style reference screenshots. |

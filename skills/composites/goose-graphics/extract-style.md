@@ -1,12 +1,17 @@
 # Skill: Create Custom Style from Reference Image
 
-Extract the visual design language from a reference image and produce a reusable slim-format style preset file — the same format used by all 36 built-in presets (e.g., `brutalist.md`, `matt-gray.md`).
+Extract the visual design language from a reference image and produce a publishable style bundle — a `gooseworks-style.json` manifest plus rendered example PNGs — that the user can push to the central Gooseworks library via `npx gooseworks styles publish`.
 
 ---
 
 ## When to Use
 
-The user provides a reference image — a screenshot, design mockup, mood board, website capture, or any visual reference — and wants to capture its design language as a reusable style preset. The output is a slim-format `.md` style file (4-8KB) that is immediately usable via `--style <name>` in the goose-graphics workflow.
+The user provides a reference image — a screenshot, design mockup, mood board, website capture, or any visual reference — and wants to capture its design language as a reusable style. The output is a working directory containing:
+
+- `gooseworks-style.json` — the manifest (the slim-format spec lives in its `designMd` field)
+- `<format>.png` — at least one rendered example (the hero); 2–3 recommended
+
+The user then runs `npx gooseworks styles publish` from that directory to push the style to the catalog, where it becomes immediately discoverable by other agents via `npx gooseworks styles list/search/get`.
 
 ---
 
@@ -130,9 +135,16 @@ Construct the `<link>` tag with the selected fonts and the specific weights need
 
 ## Phase 3: Generate the Slim Style File
 
-Generate a style file in the **slim preset format** — the same structure used by all 36 built-in presets. Do NOT generate the verbose 9-section DESIGN.md format. If you need a structural reference, read `styles/brutalist.md` or `styles/matt-gray.md`.
+Generate a slim style spec — the markdown that will live in the manifest's `designMd` field. This is the same structure used by every published Gooseworks style. Do NOT generate the verbose 9-section DESIGN.md format.
 
-The output should be **4-8KB** and contain these sections in order:
+If you need a structural reference, fetch one of the established slim specs from the catalog:
+
+```bash
+npx gooseworks styles get brutalist
+npx gooseworks styles get matt-gray
+```
+
+Pick whichever is closest in mood to what you're producing. The slim spec should be **4–8KB** and contain these sections in order:
 
 ### Section 1: Header
 
@@ -278,51 +290,105 @@ Required components:
 [...3 more components...]
 ```
 
-**Important:** Study the component snippets in `brutalist.md` and `matt-gray.md` for the right level of detail. Each snippet should be a complete, copy-pasteable HTML block with all styles inline.
+**Important:** Study the component snippets in `npx gooseworks styles get brutalist` and `npx gooseworks styles get matt-gray` for the right level of detail. Each snippet should be a complete, copy-pasteable HTML block with all styles inline.
 
 ---
 
-## Phase 4: Save & Confirm
+## Phase 4: Build the Publishable Bundle
 
-### Step 1 — Ask for a name
-
-Ask the user what they want to name this style. Suggest 2-3 descriptive names based on the mood and palette (e.g., "arctic-minimal", "warm-startup", "dark-technical", "sunset-editorial"). The name must be lowercase-kebab-case.
-
-**Name collision guard:** Before saving, check whether `styles/<name>.md` already exists in the styles directory. If it does and is a shipped preset (listed in `styles/index.json`), warn the user and suggest an alternative name. Do not overwrite shipped presets.
-
-### Step 2 — Determine save location
-
-Save the style file alongside the existing presets in the goose-graphics styles directory. Resolve the path relative to this skill file:
+The agent assembles a working directory containing the manifest and rendered examples, then calls the publish command. The directory layout is:
 
 ```
-[skill-pack-dir]/styles/<name>.md
+<working-dir>/
+  gooseworks-style.json     # the manifest
+  <hero-format>.png         # mandatory hero render (e.g., poster.png)
+  <other-format>.png        # optional, recommend 2–3 total
+  <other-format>.png
 ```
 
-Where `[skill-pack-dir]` is the directory containing `SKILL.md` — the root of the goose-graphics skill pack. This is the same directory that contains `styles/brutalist.md`, `styles/matt-gray.md`, etc.
+### Step 1 — Pick a name and check for collisions
 
-**Host-specific paths (for reference):**
+Ask the user what they want to name the style. Suggest 2–3 descriptive names based on the mood and palette (e.g., `arctic-minimal`, `warm-startup`, `dark-technical`, `sunset-editorial`). Slug must be lowercase-kebab-case (`[a-z0-9-]+`).
 
-| Host | Typical styles directory |
-|------|------------------------|
-| Claude Code / Desktop / Cowork | `~/.claude/skills/goose-graphics/styles/` |
-| Codex (OpenAI) | `~/.codex/skills/goose-graphics/styles/` |
-| Cursor | Styles embedded in `.cursor/rules/` (not applicable — Cursor uses a single `.mdc` file) |
-| Local dev / project install | `./skills/goose-graphics/styles/` or wherever the pack was cloned |
+**Collision check:** run `npx gooseworks styles get <slug>` — if the catalog returns a hit, the slug is taken. Suggest an alternative.
 
-In most cases, the skill is already running from the installed location, so saving to the `styles/` directory relative to this file is correct.
+(If the user prefers, they can omit `slug` from the manifest entirely and let the backend auto-generate one. A 409 collision response includes a `suggestedSlug` and the CLI handles re-submission.)
 
-### Step 3 — Save the file
+### Step 2 — Render at least one example (the hero)
 
-Write the complete style file using the Write tool.
+The hero is mandatory. Pick the format that best showcases the style. Hero priority order if you can render multiple:
 
-### Step 4 — Confirm
+```
+poster > carousel > infographic > slides > chart > story > tweet
+```
+
+For each example you want to include:
+
+1. Fetch the format spec: `npx gooseworks formats get <format>`.
+2. Generate HTML at the format's exact pixel dimensions, using the slim spec from Phase 3 — palette hex codes, fonts, signature visual moves all wired in. Use the standard "5 Tips for Building a Startup in 2026" brief (or a brief the user prefers) so the example demonstrates real content density, not lorem ipsum.
+3. Run the screenshot tool from this skill pack to render the PNG into the working directory:
+   ```bash
+   node [skill-pack-dir]/screenshot/screenshot.js \
+     --format <format> \
+     --input <path-to-html> \
+     --output <working-dir>/<format>.png \
+     --font-delay 1500
+   ```
+
+Recommended: **2–3 total examples** so the catalog tile shows variety.
+
+### Step 3 — Write the manifest
+
+Write `<working-dir>/gooseworks-style.json` matching the shape documented in `SKILL.md` §17.1. Required fields:
+
+```json
+{
+  "name": "Display Name",
+  "slug": "display-name",
+  "description": "50–200 words, keyword-dense, lead with mood + use case…",
+  "designMd": "<full slim spec from Phase 3 — palette, typography, layout, do/don't, CSS snippets>",
+  "moodGroup": "Organic & Warm",
+  "tags": ["warm", "editorial", "dtc"],
+  "palette": [
+    { "hex": "#XXXXXX", "role": "background" },
+    { "hex": "#XXXXXX", "role": "ink" },
+    { "hex": "#XXXXXX", "role": "accent" }
+  ],
+  "examples": [
+    { "format": "poster", "isHero": true, "file": "./poster.png", "caption": "Hero render" },
+    { "format": "carousel", "file": "./carousel.png" }
+  ]
+}
+```
+
+**Constraints to respect:**
+
+- `description`: 20–1000 chars, but aim for 50–200 words. Lead with mood + use case, then typography signals, palette signals, and industry/audience fit. Avoid generic adjectives like "beautiful" or "modern" alone — pair them with concrete signals. This field is what makes the style discoverable.
+- `designMd`: minimum 50 chars; use the full slim spec from Phase 3.
+- `moodGroup` (optional): `"Dark & Moody"`, `"Light & Editorial"`, `"Organic & Warm"`, `"Bold & Energetic"`, `"Retro & Cinematic"`, `"Structural & Technical"`, or `"Friendly Corporate"`.
+- `tags`: 3–10 lowercase tags covering mood, density, formality, era, industry-fit. Skip tags that just restate the name.
+- `examples`: minimum 1, exactly one with `isHero: true`. `format` must be a slug returned by `npx gooseworks formats list`.
+
+### Step 4 — Publish
+
+From the working directory:
+
+```bash
+cd <working-dir>
+npx gooseworks styles publish
+```
+
+The CLI reads `gooseworks-style.json`, uploads the referenced PNGs to S3, and registers the style in the catalog. On a 409 slug collision, the CLI re-submits with the suggested slug.
+
+### Step 5 — Confirm
 
 Tell the user:
-- The file was saved and its full path
-- A 3-4 line summary of the extracted style: theme (dark/light), primary palette (background + text + accent hex codes), font pairing, and overall mood
-- How to use it immediately:
+
+- The published slug and the URL where the style lives in the catalog.
+- A 3–4 line summary of the extracted style: theme (dark/light), primary palette (background + text + accent hex codes), font pairing, and overall mood.
+- How any agent can now use it:
   ```
-  /goose-graphics --style <name> --format <format> --brief "..."
+  /goose-graphics --style <slug> --format <format> --brief "..."
   ```
 
 ---
@@ -345,8 +411,8 @@ The goal is **typographic equivalence**, not exact matching. A geometric sans is
 
 ### On Completeness
 
-Every section of the output style file must be filled with substantive, specific content. Do not leave any section with placeholder text like "TBD" or "adjust as needed." The file should be immediately usable via `--style <name>` without further editing.
+Every section of the slim spec must be filled with substantive, specific content. Do not leave any section with placeholder text like "TBD" or "adjust as needed." The spec should be immediately usable via `--style <slug>` without further editing.
 
 ### On Format
 
-The output MUST be in the slim preset format (Palette → Typography → Layout → Do/Don't → CSS snippets). Do NOT generate the verbose 9-section DESIGN.md format with sections like "Visual Theme & Atmosphere," "Depth & Elevation," or "Format Adaptation Notes." Those belong to the `_full/` archive versions. The slim format is what the generation pipeline reads.
+The slim spec MUST follow the Palette → Typography → Layout → Do/Don't → CSS snippets shape. Do NOT generate the verbose 9-section DESIGN.md format with sections like "Visual Theme & Atmosphere," "Depth & Elevation," or "Format Adaptation Notes." The slim format is what the generation pipeline reads.

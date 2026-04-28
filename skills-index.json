@@ -1,6 +1,6 @@
 {
   "version": "1.2.0",
-  "generated": "2026-04-27",
+  "generated": "2026-04-28",
   "skills": [
     {
       "slug": "ad-angle-miner",
@@ -1890,7 +1890,7 @@
       "slug": "goose-graphics",
       "name": "goose-graphics",
       "category": "composites",
-      "description": "Portable visual skill pack for the Agent Skills ecosystem (Claude Code, Claude Desktop, Claude Cowork, Claude Design, Goose, Cursor, Codex). Ships 36 aesthetic presets in DESIGN.md format, 7 social-first format specs, extract-style from reference images, and automatic PNG export via Playwright.",
+      "description": "Portable visual skill pack for the Agent Skills ecosystem (Claude Code, Claude Desktop, Claude Cowork, Claude Design, Goose, Cursor, Codex). Discovers community-published styles + formats via the gooseworks CLI, runs an extract-style workflow on reference images, and exports rendered PNGs via Playwright.",
       "tags": "content, design, social",
       "path": "skills/composites/goose-graphics",
       "files": [
@@ -2338,6 +2338,7 @@
         "skills/composites/goose-graphics/examples/woodblock-folk/tweet/example.png",
         "skills/composites/goose-graphics/examples/woodblock-folk/tweet/exports/output.png",
         "skills/composites/goose-graphics/examples/woodblock-folk/tweet/index.html",
+        "skills/composites/goose-graphics/extract-style.md",
         "skills/composites/goose-graphics/formats/carousel.md",
         "skills/composites/goose-graphics/formats/chart.md",
         "skills/composites/goose-graphics/formats/infographic.md",
@@ -2404,7 +2405,6 @@
         "skills/composites/goose-graphics/styles/dot-grid-stat.md",
         "skills/composites/goose-graphics/styles/dot-matrix-colors.md",
         "skills/composites/goose-graphics/styles/electric-burst.md",
-        "skills/composites/goose-graphics/styles/extract-style.md",
         "skills/composites/goose-graphics/styles/fluid-diagram.md",
         "skills/composites/goose-graphics/styles/forest-data-report.md",
         "skills/composites/goose-graphics/styles/frosted-lens.md",
@@ -2464,12 +2464,49 @@
           ]
         },
         "features": [
-          "36 aesthetic style presets",
-          "7 output formats (carousel, story, infographic, slides, poster, chart, tweet)",
+          "Community-driven style catalog discovered via npx gooseworks styles list/search/get",
+          "Community-driven format catalog discovered via npx gooseworks formats list/search/get",
           "Unsplash + ASCII image sourcing",
           "Playwright PNG export",
-          "Image-to-style extraction",
+          "Image-to-style extraction with publish to the central catalog",
           "Args-based slash command invocation"
+        ]
+      }
+    },
+    {
+      "slug": "goose-graphics-create-format",
+      "name": "goose-graphics-create-format",
+      "category": "composites",
+      "description": ">",
+      "tags": "design, content",
+      "path": "skills/composites/goose-graphics-create-format",
+      "files": [
+        "skills/composites/goose-graphics-create-format/SKILL.md",
+        "skills/composites/goose-graphics-create-format/skill.meta.json"
+      ],
+      "metadata": {
+        "slug": "goose-graphics-create-format",
+        "category": "composites",
+        "tags": [
+          "design",
+          "content"
+        ],
+        "installation": {
+          "base_command": "npx goose-skills install goose-graphics-create-format",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        },
+        "requires_skills": [
+          "goose-graphics"
+        ],
+        "features": [
+          "Author and publish a new graphics format spec to the Gooseworks catalog",
+          "Custom canvas dimensions (64–8192px) for surfaces beyond the seven defaults",
+          "Renders at least one example via the goose-graphics Playwright pipeline",
+          "Publishes via npx gooseworks formats publish"
         ]
       }
     },
