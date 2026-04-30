@@ -85,8 +85,9 @@ Slug must be lowercase-kebab-case (`[a-z0-9-]+`).
 **Collision check:** run `npx gooseworks formats get <slug>` — if the catalog
 returns a hit, the slug is taken. Suggest an alternative.
 
-(The user may omit `slug` from the manifest; the backend auto-generates one and
-returns a `suggestedSlug` on collision, which the CLI handles.)
+(The user may omit `slug` from the manifest; the backend auto-generates one.
+On 409 the CLI prompts you to accept the server's suggested slug; pass
+`--yes` at publish time to auto-accept.)
 
 ### Step 3 — Draft `contentRulesMd`
 
@@ -175,8 +176,34 @@ cd <working-dir>
 npx gooseworks formats publish
 ```
 
-The CLI reads `gooseworks-format.json`, uploads the example PNGs, and registers
-the format in the catalog.
+The CLI reads `gooseworks-format.json`, validates it client-side, uploads the
+manifest plus the example PNGs, and registers the format in the catalog.
+
+**Slug-collision UX:** if the slug is taken, the CLI prompts
+`Slug 'X' is taken. Use 'Y' instead?` with the server's suggestion. Pass
+`--yes` to auto-accept (useful for scripted runs):
+
+```bash
+npx gooseworks formats publish --yes
+```
+
+**Success output:**
+
+```
+Published format: <slug>
+https://app.gooseworks.ai/formats/<slug>
+```
+
+**Exit codes:** `0` success, `1` transient/auth (network, 401, 5xx), `2` user
+error (400 validation, 403 not owner, 413 file too large, declined 409).
+
+**Amending a published format later:**
+
+```bash
+npx gooseworks formats update <slug>
+```
+
+Same manifest format; no slug-collision retry (the slug is locked).
 
 ### Step 7 — Confirm
 
