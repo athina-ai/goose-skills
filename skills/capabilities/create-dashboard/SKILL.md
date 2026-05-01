@@ -12,40 +12,61 @@ You are helping the user build a custom dashboard from the Gooseworks dashboard 
 The app must run on port 3847 from a single Express process that serves both the API
 routes and the built React UI so it appears in the Gooseworks App tab.
 
-Throughout this skill, "project directory" means a folder named **dashboard** placed
-directly under the sandbox home directory, and "source mirror" means a folder named
-**dashboard-src** placed under the workspace folder. Both names are conventions enforced
-by the install template — keep using these names so other tools can find the files.
+## Where the source lives (read this first)
 
-File placement rules — follow these exactly:
-- The runnable app (server entry, package manifest, build output, dependency folder) lives **only** in the project directory under the sandbox home. Never put runnable app files inside the workspace folder.
-- The source mirror under the workspace folder holds **only** source and config files (server module, src tree, vite/tailwind/postcss/tsconfig, package manifest, lockfile, env example). It must never contain dependency folders, build output, or version-control metadata.
-- New page components go in the pages folder inside the project directory's src tree. New API helpers go alongside the existing API helper module. Never scatter dashboard files outside these two locations.
+The runnable project at **`/home/user/dashboard/`** is a forest of **symlinks**
+that point back into the canonical source at **`$WORKSPACE_DIR/dashboard-src/`**
+(the s3fs-backed workspace mount). Two real local directories sit alongside
+the symlinks: `node_modules/` and `dist/`.
+
+```
+/home/user/dashboard/
+  ├── package.json      → $WORKSPACE_DIR/dashboard-src/package.json   (symlink)
+  ├── package-lock.json → ...                                         (symlink)
+  ├── server.js         → ...                                         (symlink)
+  ├── src/              → $WORKSPACE_DIR/dashboard-src/src/           (symlink)
+  ├── (other configs)   → ...                                         (symlink)
+  ├── node_modules/                                                   (REAL local dir)
+  └── dist/                                                            (REAL local dir)
+```
+
+What this means for you:
+
+- **Edit any file at `/home/user/dashboard/...` and it auto-persists to S3
+  through the symlink.** No manual sync step. No "mirror" command. Your
+  edits survive sandbox restarts the moment they hit disk.
+- **Always cd to `/home/user/dashboard/` for npm/build/server commands.**
+  Tools resolve modules from the local `node_modules/` next to where they
+  run; running them from `$WORKSPACE_DIR/dashboard-src/` would fail because
+  no node_modules sits alongside the canonical source.
+- **Never write inside `$WORKSPACE_DIR/dashboard-src/` directly.** The
+  symlinks make that path read-through-able, but bypassing them risks
+  putting binary or generated content (node_modules, dist, .vite caches)
+  into S3 — which would tank the file viewer and break future restores.
 
 ## Non-negotiable constraints
 
 1. Always use the template workflow (React + Vite + Tailwind + Express). Do not rebuild this in another framework.
 2. Use sandbox-agnostic locations only — refer to the home folder and the workspace folder via the environment-provided home variable rather than typing absolute paths into prose.
-3. Keep the active project in the project directory, outside the workspace mount.
-4. Mirror only source files into the source mirror for persistence.
-5. Never place dependencies, build output, or version control metadata in the mirror.
-6. Use one runtime port (3847) and one server process. No separate frontend dev server.
+3. Always work from `/home/user/dashboard/`. Edits there propagate to S3 via symlinks; you never need (or should run) a separate sync step.
+4. `node_modules/` and `dist/` are LOCAL only. Never copy them into the workspace folder.
+5. Use one runtime port (3847) and one server process. No separate frontend dev server.
 
 ## State handling
 
 Before editing, inspect:
-- whether the project directory exists
-- whether the source mirror exists
-- whether dependencies are already installed in the project directory
+- whether `/home/user/dashboard/package.json` is a symlink (it should be — this confirms the symlink layout is in place)
+- whether `/home/user/dashboard/node_modules/` is populated
+- whether port 3847 has a healthy server (`curl /api/health`)
 
 Then follow this decision flow:
-- Project exists with dependencies present: move to customization.
-- Project missing but mirror exists: restore from the mirror into the project directory, install deps, build, start the server, verify health.
-- Both missing: initialize from the official Gooseworks dashboard template, install deps, then continue.
-- Project exists without dependencies: install deps, then continue.
+- All three OK: move to customization.
+- Symlinks missing or `node_modules` empty: ask the platform to re-run the start flow (it will set up symlinks + npm install + build + launch).
+- `package.json` is a real file (not a symlink): the sandbox is in a legacy state — ask the platform to re-run install/start so the symlink layout gets put in place.
 
-If template initialization fails because the template source is unavailable, tell the
-user to retry once it is available. Do not hand-roll a replacement template.
+The platform's start/install orchestrator handles symlink setup, dependency
+install, build, and launch automatically. You don't run those steps by
+hand unless something is broken.
 
 ## Discovery and planning
 
@@ -147,27 +168,18 @@ Interpret health:
 - ok=true with db=true: dashboard is live.
 - db=false: inform the user that agent DB credentials/config are missing and stop further DB-dependent work.
 
-## Persistence to source mirror
-
-After each successful change:
-1. Sync source files from the project directory into the source mirror.
-2. Exclude the dependency folder, the build-output folder, and any version-control metadata folder.
-3. Verify mirror size stays small (roughly under 1 MB; if it grows very large, clean leaked heavy folders and sync again).
-
-The mirror should include source and config files needed to recreate the project quickly after restart.
-
 ## Troubleshooting
 
 If the user reports a problem with the dashboard, walk through this list in order before making code changes. Most "the dashboard is broken" reports are environmental, not bugs in the user's pages.
 
-1. **App tab is blank or shows a connection error.** Check whether the server is actually running on port 3847. If not, restart it. If the project directory is missing (sandbox was rebooted), restore from the source mirror, install deps, build, and start the server.
+1. **App tab is blank or shows a connection error.** Check whether the server is actually running on port 3847 (`curl /api/health`). If not, ask the platform to re-run the start flow.
 2. **Health endpoint returns ok=false or db=false.** The agent's database credentials are missing or invalid. Tell the user this directly; do not try to silently swap in mock data.
 3. **Page renders but charts/tables are empty.** Run the underlying query through the database tool to confirm whether the table actually has rows. If the table is missing entirely, follow the Empty-database handling section — offer to create the schema; do not silently swap to mock data. If the table exists but is empty, render an empty state. If rows exist, check the runQuery call and column names.
-4. **"Module not found" or import errors after editing.** Dependencies were not installed in the project directory, or a new package was used without being added to the manifest. Reinstall from the manifest, then rebuild.
+4. **"Module not found" or import errors after editing.** A new package was used without being added to `package.json`. Add it, then run `npm install` from `/home/user/dashboard/` and rebuild.
 5. **Changes do not appear in the App tab.** The server was not rebuilt and restarted after the edit. Run the build, restart the server on 3847, then ask the user to refresh.
-6. **Stale UI after a long session.** The build output diverged from source. Remove the build-output folder inside the project directory, rebuild, and restart.
-7. **Mirror grew very large or sync is slow.** Heavy folders (dependencies, build output, version-control metadata) leaked into the mirror. Clean them out and re-sync source-only.
-8. **Sandbox restarted and the dashboard is gone.** Restore from the source mirror into the project directory, install deps, build, start the server, verify health.
+6. **Stale UI after a long session.** The build output diverged from source. Remove `dist/` inside `/home/user/dashboard/` and rebuild.
+7. **`/home/user/dashboard/package.json` is a real file (not a symlink).** The sandbox is in a legacy / pre-symlink state. Ask the platform to re-run the start flow — it will rewire the symlinks and rebuild.
+8. **Sandbox restarted and the dashboard isn't running.** Just ask the platform to start it. The source persists in S3 via symlinks, so there's nothing for you to restore.
 
 If none of the above resolves it, read the server logs, summarize the actual error to the user in plain language, and propose the smallest fix.
 
@@ -179,8 +191,7 @@ for further edits.
 ## Iteration loop
 
 For every follow-up tweak (this loop is the agent's job, not the user's):
-1. Edit relevant files in the project directory only — never edit inside the source mirror.
-2. Rebuild and restart the single server on port 3847. Edits alone do not take effect; the rebuild + restart is mandatory every time.
-3. Re-sync source-only files to the source mirror.
-4. Verify the health endpoint before reporting back.
-5. Tell the user the update is done and ask them to refresh the App tab.
+1. Edit relevant files at `/home/user/dashboard/...`. The symlinks persist your edit to S3 automatically — there's no separate sync step.
+2. Rebuild and restart the single server on port 3847 from `/home/user/dashboard/`. Edits alone don't take effect; the rebuild + restart is mandatory every time.
+3. Verify the health endpoint before reporting back.
+4. Tell the user the update is done and ask them to refresh the App tab.
