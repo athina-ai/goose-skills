@@ -160,15 +160,47 @@ When in doubt, look at the existing pages in the template and match their densit
 
 ## Build, run, and verify
 
-The dashboard does **not** hot-reload on file changes. Editing source alone will not update what the user sees in the App tab. After **every** change, the agent must rebuild and restart the server — the user should never have to do this themselves.
+The dashboard does **not** hot-reload on file changes. After editing
+source files, you must run a production build. You do **not** need to
+restart the server for `src/` edits — the running Express server uses
+`express.static(dist/public)` and reads files from disk on every
+request, so the next iframe refresh picks up the freshly-built bundle
+automatically (Vite emits new hashed filenames; the new `index.html`
+points to them).
 
-After changes:
-1. Run a production build.
-2. Cleanly restart the existing dashboard server process (stop the old one on port 3847 first, then start the new one). Reuse the port-scoped cleanup pattern; never pkill broadly inside the sandbox.
-3. Start the server that serves both API and UI on port 3847.
-4. Verify health via the health endpoint before reporting "done".
+Default flow after a `src/` edit:
+1. Run the production build (`npm run build` from `/home/user/dashboard`).
+2. Tell the user the update is live and to refresh the App tab. Done.
 
-Interpret health:
+**Do not stop, kill, or restart the dashboard server as part of the
+normal edit loop.** Doing so wastes time and creates a failure mode:
+the agent backgrounds `node server.js`, then polls the background
+task waiting for it to "complete" — but a healthy server is a
+long-lived process, so the poll loop never resolves and the chat
+appears frozen.
+
+### When a restart IS warranted
+
+Only restart the server when one of these is true:
+
+- You edited `server.js` itself (new API route, new middleware, anything
+  that changes server behavior — Express won't pick those up without a
+  process restart).
+- The server isn't running on 3847 (the platform's start flow is the
+  right tool for this — ask it to start; do not hand-roll a launch).
+- The user reports a visible problem with the dashboard (blank App tab,
+  stale UI even after refresh, an error they can see) and a restart is
+  a plausible fix. In that case: stop the old process via port-scoped
+  cleanup (`fuser -k 3847/tcp`), launch the new one, verify health.
+
+If you do launch `node server.js` yourself, fire-and-forget it
+(redirect stdout/stderr to a log file, return immediately) and verify
+via `curl /api/health` — never poll a `TaskOutput` waiting for the
+server process to exit, because it won't.
+
+### Verifying after work that warranted a restart
+
+Hit the health endpoint:
 - ok=true with db=true: dashboard is live.
 - db=false: inform the user that agent DB credentials/config are missing and stop further DB-dependent work.
 
@@ -180,7 +212,7 @@ If the user reports a problem with the dashboard, walk through this list in orde
 2. **Health endpoint returns ok=false or db=false.** The agent's database credentials are missing or invalid. Tell the user this directly; do not try to silently swap in mock data.
 3. **Page renders but charts/tables are empty.** Run the underlying query through the database tool to confirm whether the table actually has rows. If the table is missing entirely, follow the Empty-database handling section — offer to create the schema; do not silently swap to mock data. If the table exists but is empty, render an empty state. If rows exist, check the runQuery call and column names.
 4. **"Module not found" or import errors after editing.** A new package was used without being added to `package.json`. Add it. Then change directory into `/home/user/dashboard`. Then run `npm install`. Then rebuild. **Never run `npm install` from anywhere under the workspace folder** — that installs `node_modules` into the workspace mount, which hits s3fs filesystem-semantics limits and spins forever.
-5. **Changes do not appear in the App tab.** The server was not rebuilt and restarted after the edit. Run the build, restart the server on 3847, then ask the user to refresh.
+5. **Changes do not appear in the App tab.** Build was not run after the edit, or the user hasn't refreshed yet. Run `npm run build` from `/home/user/dashboard` and ask the user to refresh — Express serves the new bundle from disk; no restart needed for `src/` edits. Only restart the server if a refresh still shows stale output.
 6. **Stale UI after a long session.** The build output diverged from source. Remove the `dist` folder inside the runnable project folder and rebuild.
 7. **The runnable project folder's `package.json` is a real file (not a symlink).** The sandbox is in a legacy / pre-symlink state. Ask the platform to re-run the start flow — it will rewire the symlinks and rebuild.
 8. **Sandbox restarted and the dashboard isn't running.** Just ask the platform to start it. The source persists in S3 via symlinks, so there's nothing for you to restore.
@@ -196,6 +228,7 @@ for further edits.
 
 For every follow-up tweak (this loop is the agent's job, not the user's):
 1. Edit relevant files at `/home/user/dashboard/...`. Symlinks persist edits to the workspace automatically; no sync step.
-2. Rebuild and restart the server on port 3847 from `/home/user/dashboard` (always cd there first). Edits alone don't take effect; rebuild + restart is mandatory every time.
-3. Verify the health endpoint before reporting back.
-4. Tell the user the update is done and ask them to refresh the App tab.
+2. From `/home/user/dashboard`, run `npm run build`. Do **not** restart the server — Express serves the new `dist/` automatically on the next request.
+3. Tell the user the update is done and ask them to refresh the App tab.
+
+Restart the server only in the cases listed under "When a restart IS warranted" above (server.js changed, server not running, or the user reports a visible problem).
