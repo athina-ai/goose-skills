@@ -1,0 +1,19 @@
+{
+  "slug": "google-ads-competitor-gap-analysis",
+  "category": "composites",
+  "description": "Unified competitive position report for a Google Search ad account. Pulls Auction Insights via Google Ads API, scrapes currently-running competitor ads, audits competitor landing pages, and surfaces specific gaps (auction position, angle gaps, keyword theme gaps, LP gaps). Maps each finding to a specific follow-up skill. Free stack only. Suggestion-only.",
+  "tags": [
+    "ads"
+  ],
+  "installation": {
+    "base_command": "npx goose-skills install google-ads-competitor-gap-analysis",
+    "supports": [
+      "claude",
+      "cursor",
+      "codex"
+    ]
+  },
+  "requires_skills": [
+    "competitor-ad-intelligence"
+  ]
+}

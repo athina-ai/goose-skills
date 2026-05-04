@@ -1,0 +1,16 @@
+{
+  "slug": "google-ads-keyword-optimizer",
+  "category": "composites",
+  "description": "Analyze the keywords currently bidding in a live Google Ads account and propose per-keyword optimizations: pause underperformers, bid up/down, change match type, deduplicate cannibalizing keywords, fix Quality Score clusters. Per-item user approval; approved actions saved as drafts in the Google Ads UI for manual activation.",
+  "tags": [
+    "ads"
+  ],
+  "installation": {
+    "base_command": "npx goose-skills install google-ads-keyword-optimizer",
+    "supports": [
+      "claude",
+      "cursor",
+      "codex"
+    ]
+  }
+}
