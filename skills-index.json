@@ -1,6 +1,6 @@
 {
   "version": "1.2.0",
-  "generated": "2026-04-29",
+  "generated": "2026-05-04",
   "skills": [
     {
       "slug": "ad-angle-miner",
@@ -1796,6 +1796,34 @@
         ],
         "installation": {
           "base_command": "npx goose-skills install feature-launch-playbook",
+          "supports": [
+            "claude",
+            "cursor",
+            "codex"
+          ]
+        }
+      }
+    },
+    {
+      "slug": "fiber-contact-reveal",
+      "name": "fiber-contact-reveal",
+      "category": "capabilities",
+      "description": "Reveal work emails, personal emails, and phone numbers from LinkedIn profiles using Fiber AI. Three tiers (standard, turbo, exhaustive) plus batch mode for up to 2000 people.",
+      "tags": "lead-generation",
+      "path": "skills/capabilities/fiber-contact-reveal",
+      "files": [
+        "skills/capabilities/fiber-contact-reveal/SKILL.md",
+        "skills/capabilities/fiber-contact-reveal/skill.meta.json"
+      ],
+      "metadata": {
+        "slug": "fiber-contact-reveal",
+        "category": "capabilities",
+        "tags": [
+          "lead-generation"
+        ],
+        "source": "orthogonal",
+        "installation": {
+          "base_command": "npx goose-skills install fiber-contact-reveal",
           "supports": [
             "claude",
             "cursor",
