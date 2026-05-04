@@ -1,0 +1,16 @@
+{
+  "slug": "google-ads-search-terms-miner",
+  "category": "composites",
+  "description": "Mine the Google Ads search terms report. Runs N-gram analysis (1/2/3-word) by cost + ROAS, classifies n-gram themes into negative / scale / expand buckets, and proposes specific actions: negative keywords to add, keyword themes to expand, ad groups to investigate. Per-item user approval; approved actions saved as drafts in the Google Ads UI for manual activation.",
+  "tags": [
+    "ads"
+  ],
+  "installation": {
+    "base_command": "npx goose-skills install google-ads-search-terms-miner",
+    "supports": [
+      "claude",
+      "cursor",
+      "codex"
+    ]
+  }
+}
